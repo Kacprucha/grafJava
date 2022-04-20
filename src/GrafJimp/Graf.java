@@ -1,10 +1,10 @@
 package GrafJimp;
 
 public class Graf {
-    static private int kolumny;
-    static private int wiersze;
-    static private double wagaMax;
-    static private double wagaMin;
+    private int kolumny;
+    private int wiersze;
+    private double wagaMax;
+    private double wagaMin;
 
     public double [] [] macierzSasiedztwa;
     public int [] [] BFS;
@@ -13,31 +13,31 @@ public class Graf {
     Graf() {
     }
 
-    static void setKolumny(int k) {
+    public void setKolumny(int k) {
         kolumny = k;
     }
-    static int getKolumny() {
+    public int getKolumny() {
         return kolumny;
     }
 
-    static void setWiersze(int w) {
+    public void setWiersze(int w) {
         wiersze = w;
     }
-    static int getWiersze() {
+    public int getWiersze() {
         return wiersze;
     }
 
-    static double getWagaMax() {
+    public double getWagaMax() {
         return wagaMax;
     }
-    static void setWagaMax(double w) {
+    public void setWagaMax(double w) {
         wagaMax = w;
     }
 
-    static double getWagaMin() {
+    public double getWagaMin() {
         return wagaMin;
     }
-    static void setWagaMin(double w) {
+    public void setWagaMin(double w) {
         wagaMin = w;
     }
 }

@@ -9,6 +9,8 @@ import java.util.Scanner;
 
 public class Interfejs extends JFrame implements ActionListener {
 
+    private Graf graf;
+
     JPanel poleNaPrzyciski = new JPanel();
     JPanel poleNaKomunikaty = new JPanel();
     Border ramka = BorderFactory.createLineBorder(Color.BLACK, 3);
@@ -20,7 +22,9 @@ public class Interfejs extends JFrame implements ActionListener {
     JButton przyciskWagi;
     JButton przyciskZapisz;
 
-    Interfejs() {
+    Interfejs(Graf g) {
+        graf = g;
+
         przyciskBFS = new JButton();
         //przyciskBFS.setBounds(50, 32, 70, 35);
         przyciskBFS.addActionListener(this);
@@ -105,7 +109,7 @@ public class Interfejs extends JFrame implements ActionListener {
                 String kolumnyIwiersze = JOptionPane.showInputDialog("Proszę podać liczbę kolumn i wierszy generowanego grafu:");
                 Scanner skaner = new Scanner(kolumnyIwiersze);
                 if (skaner.hasNextInt()) {
-                    Graf.setKolumny(skaner.nextInt());
+                    graf.setKolumny(skaner.nextInt());
                 } else {
                     JOptionPane.showMessageDialog(null, "Proszę podać liczby całkowite!", "Błąd", JOptionPane.ERROR_MESSAGE);
                     error = true;
@@ -113,7 +117,7 @@ public class Interfejs extends JFrame implements ActionListener {
 
                 if (!error) {
                     if (skaner.hasNextInt()) {
-                        Graf.setWiersze(skaner.nextInt());
+                        graf.setWiersze(skaner.nextInt());
                     } else {
                         JOptionPane.showMessageDialog(null, "Proszę podać dwie liczby całkowite!", "Błąd", JOptionPane.ERROR_MESSAGE);
                         error = true;
@@ -125,7 +129,7 @@ public class Interfejs extends JFrame implements ActionListener {
                 if (error) {
                     komunikaty.setText("Błędnie podano wymiary grafu!");
                 } else {
-                    komunikaty.setText("generuje graf: " + Graf.getKolumny() + "x" + Graf.getWiersze());
+                    komunikaty.setText("generuje graf: " + graf.getKolumny() + "x" + graf.getWiersze());
                 }
             } catch (NullPointerException r) {
                 komunikaty.setText("wychodzę z generacji");
@@ -157,7 +161,7 @@ public class Interfejs extends JFrame implements ActionListener {
                 String wagi = JOptionPane.showInputDialog("Proszę podać wagę maksymalną i minimalną wag połączeń między węzłami:");
                 Scanner skaner = new Scanner(wagi);
                 if (skaner.hasNextDouble()) {
-                    Graf.setWagaMax(skaner.nextDouble());
+                    graf.setWagaMax(skaner.nextDouble());
                 } else {
                     JOptionPane.showMessageDialog(null, "Proszę podać liczbę!", "Błąd", JOptionPane.ERROR_MESSAGE);
                     error = true;
@@ -165,18 +169,18 @@ public class Interfejs extends JFrame implements ActionListener {
 
                 if (!error) {
                     if (skaner.hasNextDouble()) {
-                        Graf.setWagaMin(skaner.nextDouble());
+                        graf.setWagaMin(skaner.nextDouble());
                     } else {
                         JOptionPane.showMessageDialog(null, "Proszę podać dwie liczby!", "Błąd", JOptionPane.ERROR_MESSAGE);
                         error = true;
                     }
                 }
 
-                if(Graf.getWagaMax() < Graf.getWagaMin()) {
+                if(graf.getWagaMax() < graf.getWagaMin()) {
                     JOptionPane.showMessageDialog(null, "Pierwsza podana liczba powinna być większa od drugiej!", "Błąd", JOptionPane.ERROR_MESSAGE);
                     error = true;
-                    Graf.setWagaMax(10);
-                    Graf.setWagaMin(0);
+                    graf.setWagaMax(10);
+                    graf.setWagaMin(0);
                 }
 
                 skaner.close();
@@ -184,7 +188,7 @@ public class Interfejs extends JFrame implements ActionListener {
                 if (error) {
                     komunikaty.setText("Błędnie podano wagi połączeń między węzłami!");
                 } else {
-                    komunikaty.setText("generowany graf bedzie miał wagi połączeń: " + Graf.getWagaMin() + "-" + Graf.getWagaMax());
+                    komunikaty.setText("generowany graf bedzie miał wagi połączeń: " + graf.getWagaMin() + "-" + graf.getWagaMax());
                 }
             } catch (NullPointerException r) {
                 komunikaty.setText("wychodzę z wag");

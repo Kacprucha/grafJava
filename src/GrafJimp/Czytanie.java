@@ -14,13 +14,13 @@ public class Czytanie {
     final Scanner skanerLinii;
     private String linia;
 
-    Czytanie () {
+    Czytanie (Graf graf) {
         this.skanerPliku = new Scanner(nazwaPliku);
         this.linia = skanerPliku.nextLine();
         this.skanerLinii = new Scanner(linia);
         try {
-            Graf.setKolumny(skanerLinii.nextInt());
-            Graf.setWiersze(skanerLinii.nextInt());
+            graf.setKolumny(skanerLinii.nextInt());
+            graf.setWiersze(skanerLinii.nextInt());
         }
         catch(InputMismatchException e) {
             System.out.println(":((((");
