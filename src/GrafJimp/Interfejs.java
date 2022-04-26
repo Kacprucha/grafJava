@@ -13,7 +13,8 @@ public class Interfejs extends JFrame implements ActionListener {
 
     JPanel poleNaPrzyciski = new JPanel();
     JPanel poleNaKomunikaty = new JPanel();
-    Border ramka = BorderFactory.createLineBorder(Color.BLACK, 3);
+    Border ramkaBoczna = BorderFactory.createMatteBorder(150, 100, 0, 100, Color.LIGHT_GRAY);
+    Border ramkaDolna = BorderFactory.createLineBorder(Color.BLACK, 3);
     JLabel komunikaty = new JLabel();
     JButton przyciskBFS;
     JButton przyciksDijkstra;
@@ -60,15 +61,15 @@ public class Interfejs extends JFrame implements ActionListener {
 
         //poleNaPrzyciski.setBackground(Color.BLACK);
         //poleNaPrzyciski.setOpaque(true);
-        poleNaPrzyciski.setPreferredSize(new Dimension(100, 100));
+        poleNaPrzyciski.setPreferredSize(new Dimension(150, 100));
         poleNaPrzyciski.setLayout(new FlowLayout());
-        poleNaPrzyciski.setBorder(ramka);
+        poleNaPrzyciski.setBorder(ramkaBoczna);
 
         //poleNaKomunikaty.setBackground(Color.BLUE);
         //poleNaKomunikaty.setOpaque(true);
-        poleNaKomunikaty.setPreferredSize(new Dimension(100, 100));
+        poleNaKomunikaty.setPreferredSize(new Dimension(100, 50));
         poleNaKomunikaty.setLayout(new BorderLayout());
-        poleNaKomunikaty.setBorder(ramka);
+        poleNaKomunikaty.setBorder(ramkaDolna);
 
         komunikaty.setHorizontalAlignment(JLabel.CENTER);
         komunikaty.setFont(new Font("Times New Roma", Font.PLAIN, 20));
@@ -77,7 +78,7 @@ public class Interfejs extends JFrame implements ActionListener {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(900, 600);
         this.setLayout(new BorderLayout());
-        this.add(poleNaPrzyciski, BorderLayout.NORTH);
+        this.add(poleNaPrzyciski, BorderLayout.WEST);
         this.add(poleNaKomunikaty, BorderLayout.SOUTH);
 
         poleNaKomunikaty.add(komunikaty);
