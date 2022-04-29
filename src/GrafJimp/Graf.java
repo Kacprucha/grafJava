@@ -6,9 +6,15 @@ public class Graf {
     private double wagaMax;
     private double wagaMin;
 
+    private int liczbaWierzcholkow=0;
+    private int liczbaKrawedzi=0;
+
     public double [] [] macierzSasiedztwa;
     public int [] [] BFS;
     public int [] sasiedzi;
+
+    private Krawedz [] krawedzi;
+    private Wierzcholek [] wierzcholki;
 
     Graf() {
     }
@@ -39,5 +45,40 @@ public class Graf {
     }
     public void setWagaMin(double w) {
         wagaMin = w;
+    }
+
+    public void setWierzcholki(Wierzcholek[] wierzcholki) {
+        this.wierzcholki = wierzcholki;
+    }
+
+    public void setKrawedzi(Krawedz[] krawedzi) {
+        this.krawedzi = krawedzi;
+    }
+
+    public void dodajKrawedz(Krawedz krawedz){
+        if(liczbaKrawedzi >= krawedzi.length){
+            Krawedz[] nKrawedzi = new Krawedz[2* krawedzi.length];
+            System.arraycopy(krawedzi,0,nKrawedzi,0, krawedzi.length);
+        }
+        krawedzi[liczbaKrawedzi++] = krawedz;
+    }
+
+    public void dodajWierzcholek(Wierzcholek wierzcholek){
+        if(liczbaWierzcholkow >= wierzcholki.length){
+            Wierzcholek[] nWierzcholki = new Wierzcholek[2*wierzcholki.length];
+            System.arraycopy(wierzcholki,0,nWierzcholki,0,wierzcholki.length);
+        }
+        wierzcholki[liczbaWierzcholkow++] = wierzcholek;
+    }
+    public void wypiszGraf(){
+        System.out.println("Tablica wierzchołków:");
+        for(int i = 0; i < liczbaWierzcholkow; i++){
+            System.out.println(wierzcholki[i]);
+        }
+
+        System.out.println("Tablica krawędzi:");
+        for(int i = 0; i < liczbaKrawedzi; i++){
+            System.out.println(krawedzi[i]);
+        }
     }
 }
