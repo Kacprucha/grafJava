@@ -1,5 +1,7 @@
 package GrafJimp;
 
+import java.io.File;
+
 public class Graf {
     private int kolumny;
     private int wiersze;
@@ -15,6 +17,8 @@ public class Graf {
 
     private Krawedz [] krawedzi;
     private Wierzcholek [] wierzcholki;
+
+    private File plikZapisu;
 
     Graf() {
     }
@@ -50,9 +54,30 @@ public class Graf {
     public void setWierzcholki(Wierzcholek[] wierzcholki) {
         this.wierzcholki = wierzcholki;
     }
+    public Wierzcholek[] getWierzcholki() {
+        return wierzcholki;
+    }
 
     public void setKrawedzi(Krawedz[] krawedzi) {
         this.krawedzi = krawedzi;
+    }
+
+    public void setPlikZapisu(File plikZapisu) {
+        this.plikZapisu = plikZapisu;
+    }
+
+    public String getNazwaPlikZapisu() {
+        return plikZapisu.getName();
+    }
+
+    public int getLiczbaWierzchołków() { return liczbaWierzcholkow; }
+
+    public void setLiczbaWierzcholkow(int liczbaWierzcholkow) {
+        this.liczbaWierzcholkow = liczbaWierzcholkow;
+    }
+
+    public void setLiczbaKrawedzi(int liczbaKrawedzi) {
+        this.liczbaKrawedzi = liczbaKrawedzi;
     }
 
     public void dodajKrawedz(Krawedz krawedz){
