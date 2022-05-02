@@ -23,6 +23,7 @@ public class Interfejs extends JFrame implements ActionListener {
     JButton przyciskWczytaj;
     JButton przyciskWagi;
     JButton przyciskZapisz;
+    JButton przyciskPomoc;
 
     Interfejs(Graf g) {
         graf = g;
@@ -60,6 +61,11 @@ public class Interfejs extends JFrame implements ActionListener {
         przyciskZapisz.setText("Zapisz");
         przyciskZapisz.setFocusable(false);
 
+        przyciskPomoc = new JButton();
+        przyciskPomoc.addActionListener(this);
+        przyciskPomoc.setText("Pomoc");
+        przyciskPomoc.setFocusable(false);
+
         //poleNaPrzyciski.setBackground(Color.BLACK);
         //poleNaPrzyciski.setOpaque(true);
         poleNaPrzyciski.setPreferredSize(new Dimension(150, 100));
@@ -91,6 +97,7 @@ public class Interfejs extends JFrame implements ActionListener {
         poleNaPrzyciski.add(przyciskBFS);
         poleNaPrzyciski.add(przyciksDijkstra);
         poleNaPrzyciski.add(przyciskZapisz);
+        poleNaPrzyciski.add(przyciskPomoc);
 
         this.setVisible(true);
     }
@@ -203,6 +210,10 @@ public class Interfejs extends JFrame implements ActionListener {
                 graf.setPlikZapisu(new File(wybieracz.getSelectedFile().getAbsolutePath()));
                 komunikaty.setText("Zapisuje plik o nazwie " + graf.getNazwaPlikZapisu());
             }
+        }
+
+        if(e.getSource() == przyciskPomoc) {
+            komunikaty.setText("Pomocy!!!");
         }
     }
 }
