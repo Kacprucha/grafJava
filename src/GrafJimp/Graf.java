@@ -21,6 +21,8 @@ public class Graf {
     private File plikZapisu;
 
     Graf() {
+        this.setWagaMax(10);
+        this.setWagaMin(0);
     }
 
     public void setKolumny(int k) {

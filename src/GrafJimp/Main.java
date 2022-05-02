@@ -5,9 +5,6 @@ public class Main {
 
         Graf graf = new Graf();
 
-        graf.setWagaMax(10);
-        graf.setWagaMin(0);
-
         new Interfejs(graf);
     }
 }
