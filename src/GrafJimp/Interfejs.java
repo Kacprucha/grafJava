@@ -24,6 +24,7 @@ public class Interfejs extends JFrame implements ActionListener {
     JButton przyciskWagi;
     JButton przyciskZapisz;
     JButton przyciskPomoc;
+    JButton przyciskWyczysc;
 
     Interfejs(Graf g) {
         graf = g;
@@ -66,6 +67,11 @@ public class Interfejs extends JFrame implements ActionListener {
         przyciskPomoc.setText("Pomoc");
         przyciskPomoc.setFocusable(false);
 
+        przyciskWyczysc = new JButton();
+        przyciskWyczysc.addActionListener(this);
+        przyciskWyczysc.setText("Wyczyść");
+        przyciskWyczysc.setFocusable(false);
+
         //poleNaPrzyciski.setBackground(Color.BLACK);
         //poleNaPrzyciski.setOpaque(true);
         poleNaPrzyciski.setPreferredSize(new Dimension(150, 100));
@@ -97,6 +103,7 @@ public class Interfejs extends JFrame implements ActionListener {
         poleNaPrzyciski.add(przyciskBFS);
         poleNaPrzyciski.add(przyciksDijkstra);
         poleNaPrzyciski.add(przyciskZapisz);
+        poleNaPrzyciski.add(przyciskWyczysc);
         poleNaPrzyciski.add(przyciskPomoc);
 
         this.setVisible(true);
@@ -210,6 +217,10 @@ public class Interfejs extends JFrame implements ActionListener {
                 graf.setPlikZapisu(new File(wybieracz.getSelectedFile().getAbsolutePath()));
                 komunikaty.setText("Zapisuje plik o nazwie " + graf.getNazwaPlikZapisu());
             }
+        }
+
+        if(e.getSource() == przyciskWyczysc) {
+            komunikaty.setText("Czyszczę ekran");
         }
 
         if(e.getSource() == przyciskPomoc) {
