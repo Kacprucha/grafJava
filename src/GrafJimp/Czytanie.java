@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 import java.util.InputMismatchException;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Czytanie {
@@ -22,71 +23,58 @@ public class Czytanie {
         return nazwaPliku;
     }
 
-    public static void czytaj(Graf graf){
-        File wejscie = new File(String.valueOf(Paths.get(nazwaPliku).toAbsolutePath()));
+    public static int czytaj(Graf graf, File wejście){
+        //File wejście = new File(String.valueOf(Paths.get(nazwaPliku).toAbsolutePath()));
         try {
-            Scanner skanerPliku = new Scanner(wejscie);
+            Scanner skanerPliku = new Scanner(wejście);
             String linia = skanerPliku.nextLine();
             Scanner skanerLinii = new Scanner(linia);
-
             try {
                 graf.setKolumny(skanerLinii.nextInt());
                 graf.setWiersze(skanerLinii.nextInt());
-
                 graf.setWierzcholki(new Wierzcholek[graf.getKolumny()* graf.getWiersze()]);
                 graf.setKrawedzi(new Krawedz[4*graf.getKolumny()* graf.getWiersze()]);
-
+                graf.setLiczbaKrawedzi(0);
+                graf.setLiczbaWierzcholkow(0);
                 int pozycja =0;
-
-                for(int i = 0; i < graf.getKolumny() * graf.getWiersze(); i++) {
+                for(int i =0;i< graf.getKolumny()*graf.getWiersze();i++){
                     linia=skanerPliku.nextLine();
-                    String nowaLinia = linia.replaceAll(":", "");
-
+                    String nowaLinia=linia.replaceAll(":", "");
                     System.out.println(nowaLinia);
-
                     skanerLinii = new Scanner(nowaLinia).useLocale(Locale.US);
-
-                    Wierzcholek wierzcholek = new Wierzcholek(i);
-
+                    Wierzcholek wierzcholek =new Wierzcholek(i);
                     System.out.println(skanerLinii.hasNextDouble());
                     System.out.println(skanerLinii.hasNextInt());
-
-                    while(skanerLinii.hasNextDouble() && skanerLinii.hasNextInt()){
-                        System.out.println("ta pętla się wykonuje");
-
-                        int sasiad =skanerLinii.nextInt();
-
-                        System.out.println(sasiad);
-
-                        wierzcholek.dodajSąsiada(sasiad, pozycja++);
-
-                        System.out.println("dodano wierzchołek");
-
-                        if(!skanerLinii.hasNextDouble()){
-                            System.out.println(skanerLinii.next());
+                    if(!nowaLinia.isEmpty()) {
+                        while (skanerLinii.hasNextDouble() && skanerLinii.hasNextInt()) {
+                            int sasiad = skanerLinii.nextInt();
+                            System.out.println(sasiad);
+                            wierzcholek.dodajSąsiada(sasiad, pozycja++);
+                            if (!skanerLinii.hasNextDouble()) {
+                                System.out.println(skanerLinii.next());
+                            }
+                            try {
+                                double waga = skanerLinii.nextDouble();
+                                Krawedz krawedz = new Krawedz(waga);
+                                krawedz.dodajPolaczenie(i, sasiad);
+                                graf.dodajKrawedz(krawedz);
+                            }catch(NoSuchElementException e){
+                                return 1;
+                            }
                         }
-
-                        double waga = skanerLinii.nextDouble();
-
-                        System.out.println(waga);
-
-                        Krawedz krawedz = new Krawedz(waga);
-                        krawedz.dodajPolaczenie(i, sasiad);
-
-                        System.out.println("dodano połączenie");
-
-                        graf.dodajKrawedz(krawedz);
                     }
-                    pozycja = 0;
+                    pozycja=0;
                     graf.dodajWierzcholek(wierzcholek);
                 }
+
             }
             catch(InputMismatchException e) {
-                System.out.println(":((((");
+                return 1;
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Nie udało się odnaleźć pliku :<");
+            return 2;
         }
         graf.wypiszGraf();
+        return 0;
     }
 }
