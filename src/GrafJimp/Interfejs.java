@@ -141,6 +141,10 @@ public class Interfejs extends JFrame implements ActionListener {
                     }
                 }
 
+                if(graf.getWiersze() <= 0 || graf.getKolumny() <= 0) {
+                    error = true;
+                }
+
                 skaner.close();
 
                 if (error) {
@@ -189,18 +193,17 @@ public class Interfejs extends JFrame implements ActionListener {
                     }
                 }
 
-                if(graf.getWagaMax() < graf.getWagaMin()) {
-                    JOptionPane.showMessageDialog(null, "Pierwsza podana liczba powinna być większa od drugiej!", "Błąd", JOptionPane.ERROR_MESSAGE);
-                    error = true;
-                    graf.setWagaMax(10);
-                    graf.setWagaMin(0);
-                }
-
                 skaner.close();
 
                 if (error) {
                     komunikaty.setText("Błędnie podano wagi połączeń między węzłami!");
                 } else {
+                    if(graf.getWagaMin() > graf.getWagaMax()) {
+                        double tempWaga = graf.getWagaMax();
+                        graf.setWagaMax(graf.getWagaMin());
+                        graf.setWagaMin(tempWaga);
+                    }
+
                     komunikaty.setText("generowany graf bedzie miał wagi połączeń: " + graf.getWagaMin() + "-" + graf.getWagaMax());
                 }
             } catch (NullPointerException r) {
