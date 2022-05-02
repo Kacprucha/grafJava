@@ -5,6 +5,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Scanner;
 
 public class Interfejs extends JFrame implements ActionListener {
@@ -80,6 +81,7 @@ public class Interfejs extends JFrame implements ActionListener {
         this.setLayout(new BorderLayout());
         this.add(poleNaPrzyciski, BorderLayout.WEST);
         this.add(poleNaKomunikaty, BorderLayout.SOUTH);
+        this.setLocationRelativeTo(null);
 
         poleNaKomunikaty.add(komunikaty);
 
@@ -138,20 +140,16 @@ public class Interfejs extends JFrame implements ActionListener {
         }
 
         if(e.getSource() == przyciskWczytaj) {
-            try {
-                String plik = JOptionPane.showInputDialog("Proszę podać nazwę pliku zawierającego graf:");
-                Scanner skaner = new Scanner(plik);
+            JFileChooser wybieracz = new JFileChooser();
 
-                if(skaner.hasNext()) {
-                    Czytanie.setNazwaPliku(skaner.nextLine());
-                    komunikaty.setText("wczytuje plik: " + Czytanie.getNazwaPliku());
-                } else {
-                    komunikaty.setText("nie podano nazwy pliku zawierającego graf, proszę spróbować jeszcze raz");
-                }
-                skaner.close();
+            int odpowedz = wybieracz.showOpenDialog(null);
 
-            } catch (NullPointerException r) {
-                komunikaty.setText("wychodzę z wczytywania");
+            if(odpowedz == JFileChooser.APPROVE_OPTION) {
+                File plik = new File(wybieracz.getSelectedFile().getAbsolutePath());
+                String nazwa = plik.getName();
+                komunikaty.setText("Wczytuje plik o nazwie " + nazwa);
+
+                Czytanie.czytaj(graf, plik);
             }
         }
 
@@ -197,20 +195,13 @@ public class Interfejs extends JFrame implements ActionListener {
         }
 
         if(e.getSource() == przyciskZapisz) {
-            try {
-                String plik = JOptionPane.showInputDialog("Proszę podać nazwę pliku do, którego chcesz zapisać graf:");
-                Scanner skaner = new Scanner(plik);
+            JFileChooser wybieracz = new JFileChooser();
 
-                if(skaner.hasNext()) {
-                    String plikDoZapisu = skaner.nextLine();
-                    komunikaty.setText("podano plik do zapisu: " + plikDoZapisu);
-                } else {
-                    komunikaty.setText("nie podano nazwy pliku do zapisu");
-                }
-                skaner.close();
+            int odpowedz = wybieracz.showSaveDialog(null);
 
-            } catch (NullPointerException r) {
-                komunikaty.setText("wychodzę z zapisu");
+            if(odpowedz == JFileChooser.APPROVE_OPTION) {
+                graf.setPlikZapisu(new File(wybieracz.getSelectedFile().getAbsolutePath()));
+                komunikaty.setText("Zapisuje plik o nazwie " + graf.getNazwaPlikZapisu());
             }
         }
     }
