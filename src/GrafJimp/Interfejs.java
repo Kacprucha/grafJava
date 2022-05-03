@@ -151,6 +151,7 @@ public class Interfejs extends JFrame implements ActionListener {
                     komunikaty.setText("Błędnie podano wymiary grafu!");
                 } else {
                     komunikaty.setText("generuje graf: " + graf.getKolumny() + "x" + graf.getWiersze());
+                    Analizator.generuj(graf);
                 }
             } catch (NullPointerException r) {
                 komunikaty.setText("wychodzę z generacji");
