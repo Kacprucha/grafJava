@@ -76,11 +76,9 @@ public class Graf {
     }
 
     public int getLiczbaWierzchołków() { return liczbaWierzcholkow; }
-
     public void setLiczbaWierzcholkow(int liczbaWierzcholkow) {
         this.liczbaWierzcholkow = liczbaWierzcholkow;
     }
-    public int getLiczbaWierzcholkow() { return liczbaWierzcholkow; }
 
     public void setLiczbaKrawedzi(int liczbaKrawedzi) {
         this.liczbaKrawedzi = liczbaKrawedzi;
