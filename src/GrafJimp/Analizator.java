@@ -2,16 +2,15 @@ package GrafJimp;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Paths;
 import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class Czytanie {
+public class Analizator {
     static private String nazwaPliku;
 
-    Czytanie () {
+    Analizator() {
 
     }
 

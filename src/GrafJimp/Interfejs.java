@@ -167,7 +167,7 @@ public class Interfejs extends JFrame implements ActionListener {
                 String nazwa = plik.getName();
                 komunikaty.setText("Wczytuje plik o nazwie " + nazwa);
 
-                Czytanie.czytaj(graf, plik);
+                Analizator.czytaj(graf, plik);
             }
         }
 
