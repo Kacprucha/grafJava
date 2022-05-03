@@ -63,6 +63,9 @@ public class Graf {
     public void setKrawedzi(Krawedz[] krawedzi) {
         this.krawedzi = krawedzi;
     }
+    public Krawedz[] getKrawedzi() {
+        return krawedzi;
+    }
 
     public void setPlikZapisu(File plikZapisu) {
         this.plikZapisu = plikZapisu;
@@ -77,10 +80,13 @@ public class Graf {
     public void setLiczbaWierzcholkow(int liczbaWierzcholkow) {
         this.liczbaWierzcholkow = liczbaWierzcholkow;
     }
+    public int getLiczbaWierzcholkow() { return liczbaWierzcholkow; }
 
     public void setLiczbaKrawedzi(int liczbaKrawedzi) {
         this.liczbaKrawedzi = liczbaKrawedzi;
     }
+    public int getLiczbaKrawedzi() { return liczbaKrawedzi; }
+
 
     public void dodajKrawedz(Krawedz krawedz){
         if(liczbaKrawedzi >= krawedzi.length){
