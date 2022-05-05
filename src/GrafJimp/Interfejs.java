@@ -17,13 +17,12 @@ public class Interfejs extends JFrame implements ActionListener {
 
     JPanel poleNaPrzyciski = new JPanel();
     JPanel poleNaKomunikaty = new JPanel();
-    JPanel poleNaGraf = new JPanel();
-    Rysowanie poleGraftest;
+    Rysowanie poleNaGraf;
     Border ramkaBoczna = BorderFactory.createMatteBorder(150, 100, 0, 100, Color.LIGHT_GRAY);
     Border ramkaDolna = BorderFactory.createLineBorder(Color.BLACK, 3);
     JLabel komunikaty = new JLabel();
-    JButton przyciskBFS;
-    JButton przyciksDijkstra;
+    JRadioButton przyciskBFS;
+    JRadioButton przyciksDijkstra;
     JButton przyciskGeneracja;
     JButton przyciskWczytaj;
     JButton przyciskWagi;
@@ -31,20 +30,28 @@ public class Interfejs extends JFrame implements ActionListener {
     JButton przyciskPomoc;
     JButton przyciskWyczysc;
 
+    ButtonGroup przyciskiAlgorytmy;
+
     Interfejs(Graf g) {
         graf = g;
 
-        przyciskBFS = new JButton();
+        przyciskBFS = new JRadioButton("BFS");
+        przyciskBFS.setBackground(Color.LIGHT_GRAY);
         //przyciskBFS.setBounds(50, 32, 70, 35);
         przyciskBFS.addActionListener(this);
-        przyciskBFS.setText("BFS");
+        //przyciskBFS.setText("BFS");
         przyciskBFS.setFocusable(false);
 
-        przyciksDijkstra = new JButton();
+        przyciksDijkstra = new JRadioButton("Dijkstra");
+        przyciksDijkstra.setBackground(Color.LIGHT_GRAY);
         //przyciksDijkstra.setBounds(140, 32, 100, 35);
         przyciksDijkstra.addActionListener(this);
-        przyciksDijkstra.setText("Dijkstra");
+        //przyciksDijkstra.setText("Dijkstra");
         przyciksDijkstra.setFocusable(false);
+
+        przyciskiAlgorytmy = new ButtonGroup();
+        przyciskiAlgorytmy.add(przyciskBFS);
+        przyciskiAlgorytmy.add(przyciksDijkstra);
 
         przyciskGeneracja = new JButton();
         //przyciskGeneracja.setBounds(260, 32, 200, 35);
@@ -92,7 +99,7 @@ public class Interfejs extends JFrame implements ActionListener {
         komunikaty.setHorizontalAlignment(JLabel.CENTER);
         komunikaty.setFont(new Font("Times New Roma", Font.PLAIN, 20));
 
-        poleGraftest = new Rysowanie(graf, komunikaty);
+        poleNaGraf = new Rysowanie(graf, komunikaty);
 
         this.setTitle("Analizator grafów");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -100,7 +107,7 @@ public class Interfejs extends JFrame implements ActionListener {
         this.setLayout(new BorderLayout());
         this.add(poleNaPrzyciski, BorderLayout.WEST);
         this.add(poleNaKomunikaty, BorderLayout.SOUTH);
-        this.add(poleGraftest, BorderLayout.CENTER);
+        this.add(poleNaGraf, BorderLayout.CENTER);
         this.setLocationRelativeTo(null);
 
         poleNaKomunikaty.add(komunikaty);
@@ -252,11 +259,13 @@ public class Interfejs extends JFrame implements ActionListener {
         }
 
         if(e.getSource() == przyciskWyczysc) {
-            komunikaty.setText("Czyszczę ekran");
+            przyciskiAlgorytmy.clearSelection();
+            komunikaty.setText("Powrót do początkowego wyglądy grafu.");
         }
 
         if(e.getSource() == przyciskPomoc) {
-            komunikaty.setText("Pomocy!!!");
+            komunikaty.setText("Wyświetlasz okno pomocy.");
+            new EkranPomocy();
         }
     }
 }
