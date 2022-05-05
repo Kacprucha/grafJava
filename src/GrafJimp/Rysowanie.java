@@ -125,7 +125,7 @@ public class Rysowanie extends JPanel {
 
         @Override
         public void mouseExited(MouseEvent e) {
-            komunikaty.setText("graf: " + graf.getKolumny() + "x" + graf.getWiersze());
+            komunikaty.setText("Wygenerowano graf: " + graf.getKolumny() + "x" + graf.getWiersze());
         }
     }
 }
