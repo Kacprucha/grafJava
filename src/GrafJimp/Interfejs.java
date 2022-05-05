@@ -11,9 +11,14 @@ import java.util.Scanner;
 public class Interfejs extends JFrame implements ActionListener {
 
     private Graf graf;
+    private Algorytmy algorytmy = new Algorytmy();
+    private int początekBFS = 0;
+    private int początekDijkstra = 0;
 
     JPanel poleNaPrzyciski = new JPanel();
     JPanel poleNaKomunikaty = new JPanel();
+    JPanel poleNaGraf = new JPanel();
+    Rysowanie poleGraftest;
     Border ramkaBoczna = BorderFactory.createMatteBorder(150, 100, 0, 100, Color.LIGHT_GRAY);
     Border ramkaDolna = BorderFactory.createLineBorder(Color.BLACK, 3);
     JLabel komunikaty = new JLabel();
@@ -87,12 +92,15 @@ public class Interfejs extends JFrame implements ActionListener {
         komunikaty.setHorizontalAlignment(JLabel.CENTER);
         komunikaty.setFont(new Font("Times New Roma", Font.PLAIN, 20));
 
+        poleGraftest = new Rysowanie(graf, komunikaty);
+
         this.setTitle("Analizator grafów");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(900, 600);
         this.setLayout(new BorderLayout());
         this.add(poleNaPrzyciski, BorderLayout.WEST);
         this.add(poleNaKomunikaty, BorderLayout.SOUTH);
+        this.add(poleGraftest, BorderLayout.CENTER);
         this.setLocationRelativeTo(null);
 
         poleNaKomunikaty.add(komunikaty);
@@ -113,10 +121,29 @@ public class Interfejs extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == przyciskBFS) {
             komunikaty.setText("wciskam BFS");
+            int[] kolor = new int [graf.getLiczbaWierzchołków()];
+            Wierzcholek[] rodzic = new Wierzcholek [graf.getLiczbaWierzchołków()];
+            int[] odległość = new int [graf.getLiczbaWierzchołków()];
+            algorytmy.wykonajAlgorytmBFS(graf, kolor, rodzic, odległość, początekBFS);
+            for(int i=0;i<graf.getLiczbaWierzchołków();i++){
+                if(odległość[i]==-1 && i!=początekBFS) {
+                    break;
+                }
+                if(i==graf.getLiczbaWierzchołków()-1){
+                    komunikaty.setText("Graf jest spójny");
+                }else{
+                    komunikaty.setText("Graf nie jest spójny");
+                }
+            }
         }
 
         if(e.getSource() == przyciksDijkstra) {
             komunikaty.setText("wciskam Dijkste");
+            double [] odległości = new double[graf.getLiczbaWierzchołków()];
+            algorytmy.wykonajAlgorytmDijkstry(graf, początekDijkstra, odległości);
+            for(int i =0;i<graf.getLiczbaWierzchołków();i++){
+                System.out.println(odległości[i]);
+            }
         }
 
         if(e.getSource() == przyciskGeneracja) {
@@ -152,6 +179,7 @@ public class Interfejs extends JFrame implements ActionListener {
                 } else {
                     komunikaty.setText("generuje graf: " + graf.getKolumny() + "x" + graf.getWiersze());
                     Analizator.generuj(graf);
+                    repaint();
                 }
             } catch (NullPointerException r) {
                 komunikaty.setText("wychodzę z generacji");
