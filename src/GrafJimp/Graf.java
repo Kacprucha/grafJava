@@ -1,6 +1,9 @@
 package GrafJimp;
 
+import javax.swing.*;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Graf {
     private int kolumny;
@@ -111,5 +114,36 @@ public class Graf {
         for(int i = 0; i < liczbaKrawedzi; i++){
             System.out.println(krawedzi[i]);
         }
+    }
+
+    public void zapiszaGrafDoPliku(JLabel komunikat) {
+        try {
+            Wierzcholek[] wierzcholeki = this.getWierzcholki();
+            Wierzcholek w;
+
+            plikZapisu.createNewFile();
+
+            FileWriter pisarz = new FileWriter(plikZapisu);
+            pisarz.write(this.getKolumny() + " " + this.getWiersze() + "\n");
+
+            for(int i = 0; i < this.liczbaWierzcholkow; i++) {
+                w = wierzcholeki[i];
+
+                for(int j = 0; j < 4; j++) {
+                    if(w.getKonkretnyNumerSasiada(j) != -1) {
+                        pisarz.write(w.getKonkretnyNumerSasiada(j) + " :" + w.getKokretnaWagePolaczenia(j) + "\t");
+                    }
+                }
+
+                pisarz.write("\n");
+            }
+
+            pisarz.close();
+
+        } catch (IOException e) {
+            komunikat.setText("Wystąpił błąd! Zapisywanie grafu zostało wstrzymane.");
+            e.printStackTrace();
+        }
+
     }
 }
