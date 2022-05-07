@@ -36,7 +36,7 @@ public class Analizator {
                 graf.setLiczbaKrawedzi(0);
                 graf.setLiczbaWierzcholkow(0);
 
-                int pozycja =0;
+                int pozycja = 0;
 
                 for(int i = 0; i < graf.getKolumny() * graf.getWiersze(); i++){
                     linia = skanerPliku.nextLine();
@@ -56,7 +56,7 @@ public class Analizator {
 
                             System.out.println(sasiad);
 
-                            wierzcholek.dodajSąsiada(sasiad, pozycja++);
+                            wierzcholek.dodajSąsiada(sasiad, pozycja);
 
                             if (!skanerLinii.hasNextDouble()) {
                                 System.out.println(skanerLinii.next());
@@ -66,6 +66,9 @@ public class Analizator {
                                 Krawedz krawedz = new Krawedz(waga);
                                 krawedz.dodajPolaczenie(i, sasiad);
                                 graf.dodajKrawedz(krawedz);
+
+                                wierzcholek.setWagiPolaczen(pozycja, waga);
+                                pozycja++;
                             }catch(NoSuchElementException e){
                                 return 1;
                             }
@@ -106,50 +109,63 @@ public class Analizator {
             System.out.println("wierzchołek " + i);
             System.out.println("sąsiedzi:");
 
+
             sasiad = i - 1;
             if(sasiad >= 0 && (sasiad + 1) % graf.getWiersze() != 0) {
-                wierzcholek.dodajSąsiada(sasiad, pozycja++);
+                wierzcholek.dodajSąsiada(sasiad, pozycja);
 
                 waga = graf.getWagaMin() + (graf.getWagaMax() - graf.getWagaMin()) * r.nextDouble();
                 Krawedz krawedz = new Krawedz(waga);
                 krawedz.dodajPolaczenie(i, sasiad);
                 graf.dodajKrawedz(krawedz);
+
+                wierzcholek.setWagiPolaczen(pozycja, waga);
+                pozycja++;
 
                 System.out.print(sasiad + " waga - " + waga + "\n");
             }
 
             sasiad = i + graf.getWiersze();
             if(sasiad < graf.getKolumny() * graf.getWiersze()) {
-                wierzcholek.dodajSąsiada(sasiad, pozycja++);
+                wierzcholek.dodajSąsiada(sasiad, pozycja);
 
                 waga = graf.getWagaMin() + (graf.getWagaMax() - graf.getWagaMin()) * r.nextDouble();
                 Krawedz krawedz = new Krawedz(waga);
                 krawedz.dodajPolaczenie(i, sasiad);
                 graf.dodajKrawedz(krawedz);
+
+                wierzcholek.setWagiPolaczen(pozycja, waga);
+                pozycja++;
 
                 System.out.print(sasiad + " waga - " + waga + "\n");
             }
 
             sasiad = i + 1;
             if(sasiad < graf.getKolumny() * graf.getWiersze() && sasiad % graf.getWiersze() != 0) {
-                wierzcholek.dodajSąsiada(sasiad, pozycja++);
+                wierzcholek.dodajSąsiada(sasiad, pozycja);
 
                 waga = graf.getWagaMin() + (graf.getWagaMax() - graf.getWagaMin()) * r.nextDouble();
                 Krawedz krawedz = new Krawedz(waga);
                 krawedz.dodajPolaczenie(i, sasiad);
                 graf.dodajKrawedz(krawedz);
+
+                wierzcholek.setWagiPolaczen(pozycja, waga);
+                pozycja++;
 
                 System.out.print(sasiad + " waga - " + waga + "\n");
             }
 
             sasiad = i - graf.getWiersze();
             if(sasiad >= 0) {
-                wierzcholek.dodajSąsiada(sasiad, pozycja++);
+                wierzcholek.dodajSąsiada(sasiad, pozycja);
 
                 waga = graf.getWagaMin() + (graf.getWagaMax() - graf.getWagaMin()) * r.nextDouble();
                 Krawedz krawedz = new Krawedz(waga);
                 krawedz.dodajPolaczenie(i, sasiad);
                 graf.dodajKrawedz(krawedz);
+
+                wierzcholek.setWagiPolaczen(pozycja, waga);
+                pozycja++;
 
                 System.out.print(sasiad + " waga - " + waga + "\n");
             }

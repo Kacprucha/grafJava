@@ -3,6 +3,7 @@ package GrafJimp;
 public class Wierzcholek {
     private int numer;
     private int[] numerySasiadow = new int[4];
+    private double[] wagiPolaczen = new double[4];
 
     public Wierzcholek(int numer) {
         this.numer = numer;
@@ -17,6 +18,9 @@ public class Wierzcholek {
     public int[] getNumerySąsiadów() {
         return numerySasiadow;
     }
+    public int getKonkretnyNumerSasiada(int i) {
+        return numerySasiadow[i];
+    }
 
     public int getNumer() {
         return numer;
@@ -24,6 +28,13 @@ public class Wierzcholek {
 
     public void dodajSąsiada(int numerSasiada, int pozycja){
         numerySasiadow[pozycja]=numerSasiada;
+    }
+
+    public void setWagiPolaczen(int i, double w) {
+        this.wagiPolaczen[i] = w;
+    }
+    public double getKokretnaWagePolaczenia(int i) {
+        return wagiPolaczen[i];
     }
 
     @Override
