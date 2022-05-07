@@ -11,6 +11,7 @@ public class Rysowanie extends JPanel {
     private int wysokosc;
     private Graf graf;
     private JLabel komunikaty;
+    private Wezel[] tablicaWezlow;
 
     private int wysokoscJednostki;
     private int szerokoscJednostki;
@@ -41,10 +42,23 @@ public class Rysowanie extends JPanel {
     public void paint(Graphics g) {
         Graphics2D g2D = (Graphics2D) g;
 
+        if(this.tablicaWezlow != null) {
+            for(int i = 0; i < this.tablicaWezlow.length; i++) {
+                this.remove(this.tablicaWezlow[i]);
+            }
+        }
+
+        if(graf.getWiersze() != 0) {
+            this.tablicaWezlow = new Wezel[graf.getWiersze() * graf.getKolumny()];
+        }
+
         if(graf.getLiczbaWierzchołków() != 0) {
             int mnoznikY = 1;
             int mnoznikX = 0;
-            int promien, x, y;
+            int promien, x, y, xp = 0, yp = 0, xk = 0, yk = 0;
+            int[] wspolrzedneX = new int[graf.getWiersze() * graf.getKolumny()];
+            int[] wspolrzedneY = new int[graf.getWiersze() * graf.getKolumny()];
+            int[] konceKrawedzi;
 
             setSzerekosc(this);
             setWysokosc(this);
@@ -73,15 +87,139 @@ public class Rysowanie extends JPanel {
                 x = (mnoznikX * szerokoscJednostki) - promien;
                 y = (mnoznikY * wysokoscJednostki) - promien;
 
+                wspolrzedneX[i] = x;
+                wspolrzedneY[i] = y;
+
                 g2D.fillOval(x, y , promien, promien);
 
                 Wezel w = new Wezel(x, y, promien, i, komunikaty, graf);
+                this.tablicaWezlow[i] = w;
                 this.add(w);
 
                 mnoznikY++;
             }
+
+            Krawedz[] listaKrawedzi = graf.getKrawedzi();
+            int odlegolosc = promien / 4;
+            promien = promien / 2;
+            g2D.setStroke(new BasicStroke((float)(0.5 * odlegolosc)));
+
+            for(int i = 0; i < graf.getLiczbaKrawedzi(); i++) {
+                konceKrawedzi = listaKrawedzi[i].getPolaczenie();
+
+                if(konceKrawedzi[1] == konceKrawedzi[0] - 1) {
+                    xp = wspolrzedneX[konceKrawedzi[0]] + promien - odlegolosc;
+                    yp = wspolrzedneY[konceKrawedzi[0]];
+
+                    xk = wspolrzedneX[konceKrawedzi[1]] + promien - odlegolosc;
+                    yk = wspolrzedneY[konceKrawedzi[1]] + (2 * promien);
+
+                    g2D.setColor(wybierzKolor(listaKrawedzi[i].getWaga()));
+                }
+
+                if(konceKrawedzi[1] == konceKrawedzi[0] + graf.getWiersze()) {
+                    xp = wspolrzedneX[konceKrawedzi[0]] + (2 * promien);
+                    yp = wspolrzedneY[konceKrawedzi[0]] + promien - odlegolosc;
+
+                    xk = wspolrzedneX[konceKrawedzi[1]];
+                    yk = wspolrzedneY[konceKrawedzi[1]] + promien - odlegolosc;
+
+                    g2D.setColor(wybierzKolor(listaKrawedzi[i].getWaga()));
+                }
+
+                if(konceKrawedzi[1] == konceKrawedzi[0] + 1) {
+                    xp = wspolrzedneX[konceKrawedzi[0]] + promien + odlegolosc;
+                    yp = wspolrzedneY[konceKrawedzi[0]] + (2 * promien);
+
+                    xk = wspolrzedneX[konceKrawedzi[1]] + promien + odlegolosc;
+                    yk = wspolrzedneY[konceKrawedzi[1]];
+
+                    g2D.setColor(wybierzKolor(listaKrawedzi[i].getWaga()));
+                }
+
+                if(konceKrawedzi[1] == konceKrawedzi[0] - graf.getWiersze()) {
+                    xp = wspolrzedneX[konceKrawedzi[0]];
+                    yp = wspolrzedneY[konceKrawedzi[0]] + promien + odlegolosc;
+
+                    xk = wspolrzedneX[konceKrawedzi[1]] + (2 * promien);
+                    yk = wspolrzedneY[konceKrawedzi[1]] + promien + odlegolosc;
+
+                    g2D.setColor(wybierzKolor(listaKrawedzi[i].getWaga()));
+                }
+
+                g2D.drawLine(xp, yp, xk, yk);
+            }
         }
 
+    }
+
+    private Color wybierzKolor(double waga) {
+        Color kolor = new Color(0, 0, 0);
+        int jednostka;
+        int numer;
+        int wagaCalkowita;
+        int wagaPoPrzecinku;
+        int r;
+        int g;
+        int b;
+
+        jednostka = (int) (1020 / (this.graf.getWagaMax() - this.graf.getWagaMin()));
+
+        if(waga == this.graf.getWagaMin()) {
+            kolor = new Color(0, 0, 255);
+            return kolor;
+        }
+
+        if(waga == this.graf.getWagaMax()) {
+            kolor = new Color(255, 0, 0);
+            return kolor;
+        }
+
+        wagaCalkowita = (int) waga;
+        wagaPoPrzecinku = Math.round ( (float) (waga - wagaCalkowita) * jednostka);
+        wagaCalkowita = (int) (wagaCalkowita - graf.getWagaMin());
+        numer = wagaCalkowita * jednostka + wagaPoPrzecinku;
+
+        if(numer > 0 && numer <= 255) {
+            r = 0;
+            g = numer;
+            b = 255;
+
+            kolor = new Color(r, g, b);
+            return kolor;
+        }
+
+        if(numer > 255 && numer <= 510) {
+            numer = numer - 255;
+            r = 0;
+            g = 255;
+            b = 255 - numer;
+
+            kolor = new Color(r, g, b);
+            return kolor;
+        }
+
+        if(numer > 510 && numer <= 765) {
+            numer = numer - 510;
+            r = numer;
+            g = 255;
+            b = 0;
+
+            kolor = new Color(r, g, b);
+            return kolor;
+        }
+
+        if(numer > 765 && numer < 1020) {
+            numer = numer - 765;
+            r = 255;
+            g = 255 - numer;
+            b = 0;
+
+            kolor = new Color(r, g, b);
+            return kolor;
+        }
+
+        return kolor;
     }
 
     public static class Wezel extends JLabel implements MouseListener {
