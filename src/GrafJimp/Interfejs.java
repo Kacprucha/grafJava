@@ -248,13 +248,18 @@ public class Interfejs extends JFrame implements ActionListener {
         }
 
         if(e.getSource() == przyciskZapisz) {
-            JFileChooser wybieracz = new JFileChooser();
+            if(graf.getWierzcholki() != null) {
+                JFileChooser wybieracz = new JFileChooser();
 
-            int odpowedz = wybieracz.showSaveDialog(null);
+                int odpowedz = wybieracz.showSaveDialog(null);
 
-            if(odpowedz == JFileChooser.APPROVE_OPTION) {
-                graf.setPlikZapisu(new File(wybieracz.getSelectedFile().getAbsolutePath()));
-                komunikaty.setText("Zapisuje plik o nazwie " + graf.getNazwaPlikZapisu());
+                if (odpowedz == JFileChooser.APPROVE_OPTION) {
+                    graf.setPlikZapisu(new File(wybieracz.getSelectedFile().getAbsolutePath()));
+                    komunikaty.setText("Zapisuje plik o nazwie " + graf.getNazwaPlikZapisu());
+                    graf.zapiszaGrafDoPliku(komunikaty);
+                }
+            } else {
+                komunikaty.setText("Nie wygenerowano jeszcze grafu, który mozna było by zapisać!");
             }
         }
 
