@@ -128,16 +128,22 @@ public class Interfejs extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == przyciskBFS) {
             komunikaty.setText("wciskam BFS");
+            poleNaGraf.kliknientyBFS();
+
             int[] kolor = new int [graf.getLiczbaWierzchołków()];
             Wierzcholek[] rodzic = new Wierzcholek [graf.getLiczbaWierzchołków()];
             int[] odległość = new int [graf.getLiczbaWierzchołków()];
             algorytmy.wykonajAlgorytmBFS(graf, kolor, rodzic, odległość, początekBFS);
+
+            poleNaGraf.setTablicaBFS(odległość);
+
             for(int i=0;i<graf.getLiczbaWierzchołków();i++){
                 if(odległość[i]==-1 && i!=początekBFS) {
                     break;
                 }
                 if(i==graf.getLiczbaWierzchołków()-1){
                     komunikaty.setText("Graf jest spójny");
+                    repaint();
                 }else{
                     komunikaty.setText("Graf nie jest spójny");
                 }
@@ -266,6 +272,8 @@ public class Interfejs extends JFrame implements ActionListener {
 
         if(e.getSource() == przyciskWyczysc) {
             przyciskiAlgorytmy.clearSelection();
+            poleNaGraf.wyczyszczonyBFS();
+            repaint();
             komunikaty.setText("Powrót do początkowego wyglądy grafu.");
         }
 

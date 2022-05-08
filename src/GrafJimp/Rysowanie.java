@@ -13,6 +13,11 @@ public class Rysowanie extends JPanel {
     private JLabel komunikaty;
     private Wezel[] tablicaWezlow;
 
+    private boolean BFS = false;
+    private int[] tablicaBFS;
+
+    private boolean djikstra = false;
+
     private int wysokoscJednostki;
     private int szerokoscJednostki;
 
@@ -39,6 +44,17 @@ public class Rysowanie extends JPanel {
         return wysokosc;
     }
 
+    public void kliknientyBFS() {
+        BFS = true;
+    }
+    public void wyczyszczonyBFS() {
+        BFS = false;
+    }
+
+    public void setTablicaBFS(int[] t) {
+        tablicaBFS = t;
+    }
+
     public void paint(Graphics g) {
         Graphics2D g2D = (Graphics2D) g;
 
@@ -59,6 +75,7 @@ public class Rysowanie extends JPanel {
             int[] wspolrzedneX = new int[graf.getWiersze() * graf.getKolumny()];
             int[] wspolrzedneY = new int[graf.getWiersze() * graf.getKolumny()];
             int[] konceKrawedzi;
+            int odlegolosc;
 
             setSzerekosc(this);
             setWysokosc(this);
@@ -78,7 +95,7 @@ public class Rysowanie extends JPanel {
                 }
             }
 
-            for(int i = 0; i < graf.getWiersze() * graf.getKolumny(); i++) {
+            for(int i = 0; i < graf.getLiczbaWierzchołków(); i++) {
                 if(i % graf.getWiersze() == 0) {
                     mnoznikY = 1;
                     mnoznikX++;
@@ -99,55 +116,131 @@ public class Rysowanie extends JPanel {
                 mnoznikY++;
             }
 
-            Krawedz[] listaKrawedzi = graf.getKrawedzi();
-            int odlegolosc = promien / 4;
-            promien = promien / 2;
-            g2D.setStroke(new BasicStroke((float)(0.5 * odlegolosc)));
+            if(BFS) {
+                Krawedz[] listaKrawedzi = graf.getKrawedzi();
+                Krawedz[] krawedzie = new Krawedz[4];
+                int ilosc;
+                int[] polaczeniaK;
 
-            for(int i = 0; i < graf.getLiczbaKrawedzi(); i++) {
-                konceKrawedzi = listaKrawedzi[i].getPolaczenie();
+                odlegolosc = promien / 3;
+                promien = promien / 2;
+                g2D.setStroke(new BasicStroke((float) (0.5 * odlegolosc)));
+                g2D.setColor(wybierzKolor(graf.getWagaMin()));
 
-                if(konceKrawedzi[1] == konceKrawedzi[0] - 1) {
-                    xp = wspolrzedneX[konceKrawedzi[0]] + promien - odlegolosc;
-                    yp = wspolrzedneY[konceKrawedzi[0]];
 
-                    xk = wspolrzedneX[konceKrawedzi[1]] + promien - odlegolosc;
-                    yk = wspolrzedneY[konceKrawedzi[1]] + (2 * promien);
+                for(int i = 0; i < tablicaBFS.length; i++) {
+                    int poczatek = tablicaBFS[i];
 
-                    g2D.setColor(wybierzKolor(listaKrawedzi[i].getWaga()));
+                    if (poczatek >= 0) {
+                        poczatek = i;
+                        ilosc = 0;
+
+                        try {
+                            for (Krawedz k : listaKrawedzi) {
+                                polaczeniaK = k.getPolaczenie();
+                                if (polaczeniaK[0] == poczatek) {
+                                    krawedzie[ilosc++] = k;
+                                }
+                            }
+                        } catch (NullPointerException ignored) {
+                        }
+
+                        for (Krawedz k : krawedzie) {
+                            try {
+                                konceKrawedzi = k.getPolaczenie();
+
+                                if (konceKrawedzi[1] == konceKrawedzi[0] - 1) {
+                                    xp = wspolrzedneX[konceKrawedzi[0]] + promien;
+                                    yp = wspolrzedneY[konceKrawedzi[0]];
+
+                                    xk = wspolrzedneX[konceKrawedzi[1]] + promien;
+                                    yk = wspolrzedneY[konceKrawedzi[1]] + (2 * promien);
+                                }
+
+                                if (konceKrawedzi[1] == konceKrawedzi[0] + graf.getWiersze()) {
+                                    xp = wspolrzedneX[konceKrawedzi[0]] + (2 * promien);
+                                    yp = wspolrzedneY[konceKrawedzi[0]] + promien;
+
+                                    xk = wspolrzedneX[konceKrawedzi[1]];
+                                    yk = wspolrzedneY[konceKrawedzi[1]] + promien;
+                                }
+
+                                if (konceKrawedzi[1] == konceKrawedzi[0] + 1) {
+                                    xp = wspolrzedneX[konceKrawedzi[0]] + promien;
+                                    yp = wspolrzedneY[konceKrawedzi[0]] + (2 * promien);
+
+                                    xk = wspolrzedneX[konceKrawedzi[1]] + promien;
+                                    yk = wspolrzedneY[konceKrawedzi[1]];
+                                }
+
+                                if (konceKrawedzi[1] == konceKrawedzi[0] - graf.getWiersze()) {
+                                    xp = wspolrzedneX[konceKrawedzi[0]];
+                                    yp = wspolrzedneY[konceKrawedzi[0]] + promien;
+
+                                    xk = wspolrzedneX[konceKrawedzi[1]] + (2 * promien);
+                                    yk = wspolrzedneY[konceKrawedzi[1]] + promien;
+                                }
+
+                                g2D.drawLine(xp, yp, xk, yk);
+                            } catch (NullPointerException ignored) {
+                            }
+                        }
+                    }
                 }
 
-                if(konceKrawedzi[1] == konceKrawedzi[0] + graf.getWiersze()) {
-                    xp = wspolrzedneX[konceKrawedzi[0]] + (2 * promien);
-                    yp = wspolrzedneY[konceKrawedzi[0]] + promien - odlegolosc;
+            } else if(djikstra) {
 
-                    xk = wspolrzedneX[konceKrawedzi[1]];
-                    yk = wspolrzedneY[konceKrawedzi[1]] + promien - odlegolosc;
+            } else {
+                Krawedz[] listaKrawedzi = graf.getKrawedzi();
+                odlegolosc = promien / 4;
+                promien = promien / 2;
+                g2D.setStroke(new BasicStroke((float) (0.5 * odlegolosc)));
 
-                    g2D.setColor(wybierzKolor(listaKrawedzi[i].getWaga()));
+                for (int i = 0; i < graf.getLiczbaKrawedzi(); i++) {
+                    konceKrawedzi = listaKrawedzi[i].getPolaczenie();
+
+                    if (konceKrawedzi[1] == konceKrawedzi[0] - 1) {
+                        xp = wspolrzedneX[konceKrawedzi[0]] + promien - odlegolosc;
+                        yp = wspolrzedneY[konceKrawedzi[0]];
+
+                        xk = wspolrzedneX[konceKrawedzi[1]] + promien - odlegolosc;
+                        yk = wspolrzedneY[konceKrawedzi[1]] + (2 * promien);
+
+                        g2D.setColor(wybierzKolor(listaKrawedzi[i].getWaga()));
+                    }
+
+                    if (konceKrawedzi[1] == konceKrawedzi[0] + graf.getWiersze()) {
+                        xp = wspolrzedneX[konceKrawedzi[0]] + (2 * promien);
+                        yp = wspolrzedneY[konceKrawedzi[0]] + promien - odlegolosc;
+
+                        xk = wspolrzedneX[konceKrawedzi[1]];
+                        yk = wspolrzedneY[konceKrawedzi[1]] + promien - odlegolosc;
+
+                        g2D.setColor(wybierzKolor(listaKrawedzi[i].getWaga()));
+                    }
+
+                    if (konceKrawedzi[1] == konceKrawedzi[0] + 1) {
+                        xp = wspolrzedneX[konceKrawedzi[0]] + promien + odlegolosc;
+                        yp = wspolrzedneY[konceKrawedzi[0]] + (2 * promien);
+
+                        xk = wspolrzedneX[konceKrawedzi[1]] + promien + odlegolosc;
+                        yk = wspolrzedneY[konceKrawedzi[1]];
+
+                        g2D.setColor(wybierzKolor(listaKrawedzi[i].getWaga()));
+                    }
+
+                    if (konceKrawedzi[1] == konceKrawedzi[0] - graf.getWiersze()) {
+                        xp = wspolrzedneX[konceKrawedzi[0]];
+                        yp = wspolrzedneY[konceKrawedzi[0]] + promien + odlegolosc;
+
+                        xk = wspolrzedneX[konceKrawedzi[1]] + (2 * promien);
+                        yk = wspolrzedneY[konceKrawedzi[1]] + promien + odlegolosc;
+
+                        g2D.setColor(wybierzKolor(listaKrawedzi[i].getWaga()));
+                    }
+
+                    g2D.drawLine(xp, yp, xk, yk);
                 }
-
-                if(konceKrawedzi[1] == konceKrawedzi[0] + 1) {
-                    xp = wspolrzedneX[konceKrawedzi[0]] + promien + odlegolosc;
-                    yp = wspolrzedneY[konceKrawedzi[0]] + (2 * promien);
-
-                    xk = wspolrzedneX[konceKrawedzi[1]] + promien + odlegolosc;
-                    yk = wspolrzedneY[konceKrawedzi[1]];
-
-                    g2D.setColor(wybierzKolor(listaKrawedzi[i].getWaga()));
-                }
-
-                if(konceKrawedzi[1] == konceKrawedzi[0] - graf.getWiersze()) {
-                    xp = wspolrzedneX[konceKrawedzi[0]];
-                    yp = wspolrzedneY[konceKrawedzi[0]] + promien + odlegolosc;
-
-                    xk = wspolrzedneX[konceKrawedzi[1]] + (2 * promien);
-                    yk = wspolrzedneY[konceKrawedzi[1]] + promien + odlegolosc;
-
-                    g2D.setColor(wybierzKolor(listaKrawedzi[i].getWaga()));
-                }
-
-                g2D.drawLine(xp, yp, xk, yk);
             }
         }
 
