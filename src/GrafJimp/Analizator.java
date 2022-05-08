@@ -11,16 +11,7 @@ public class Analizator {
 
     }
 
-    static void setNazwaPliku(String s) {
-        nazwaPliku = s;
-    }
-
-    static String getNazwaPliku() {
-        return nazwaPliku;
-    }
-
     public static int czytaj(Graf graf, File wejście){
-        //File wejście = new File(String.valueOf(Paths.get(nazwaPliku).toAbsolutePath()));
         try {
             Scanner skanerPliku = new Scanner(wejście);
             String linia = skanerPliku.nextLine();

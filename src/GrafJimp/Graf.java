@@ -14,10 +14,6 @@ public class Graf {
     private int liczbaWierzcholkow=0;
     private int liczbaKrawedzi=0;
 
-    public double [] [] macierzSasiedztwa;
-    public int [] [] BFS;
-    public int [] sasiedzi;
-
     private Krawedz [] krawedzi;
     private Wierzcholek [] wierzcholki;
 
