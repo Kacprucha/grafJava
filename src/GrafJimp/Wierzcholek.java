@@ -1,5 +1,7 @@
 package GrafJimp;
 
+import java.util.Arrays;
+
 public class Wierzcholek {
     private int numer;
     private int[] numerySasiadow = new int[4];
@@ -12,8 +14,14 @@ public class Wierzcholek {
         }
     }
 
-    public void setNumerySąsiadów(int[] numerySasiadow) {
-        this.numerySasiadow = numerySasiadow;
+    public Wierzcholek(Wierzcholek w){
+        this.numer=w.getNumer();
+        this.numerySasiadow= Arrays.copyOf(w.getNumerySąsiadów(), 4);
+        this.wagiPolaczen= Arrays.copyOf(w.getWagiPolaczen(), 4);
+    }
+
+    public void setNumerSasiada(int numerSasiada, int wartosc) {
+        this.numerySasiadow[numerSasiada] = wartosc;
     }
     public int[] getNumerySąsiadów() {
         return numerySasiadow;
@@ -33,6 +41,9 @@ public class Wierzcholek {
     public void setWagiPolaczen(int i, double w) {
         this.wagiPolaczen[i] = w;
     }
+    public double[] getWagiPolaczen() {
+        return wagiPolaczen;
+    }
     public double getKokretnaWagePolaczenia(int i) {
         return wagiPolaczen[i];
     }
@@ -40,6 +51,17 @@ public class Wierzcholek {
     @Override
     public String toString() {
         return "Wierzchołek{" + "numer=" + numer + '}' + "Pierwszy sąsiad:" + numerySasiadow[0];
+    }
+
+    @Override
+    public Object clone(){
+        Wierzcholek w = null;
+        try{
+            w= (Wierzcholek) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return w;
     }
 
 }
