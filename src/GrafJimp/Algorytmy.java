@@ -75,7 +75,7 @@ public class Algorytmy {
         for(int i =0; i<graf.getLiczbaWierzchołków();i++) {
             tmpWierzcholki[i] = new Wierzcholek(graf.getWierzcholki()[i]);
         }
-        System.out.println("Przed");
+        //System.out.println("Przed");
 
         while(poczatek != koniec){
 
@@ -100,11 +100,11 @@ public class Algorytmy {
                             odleglosci[i] = odleglosci[u] + k.getWaga();
                             kolejka[koniec++] = i;
                             poprzednik[i] = u;
-                            System.out.println(tmpWierzcholki[u].getNumerySąsiadów()[nrSasiada]);
-                            System.out.println(graf.getWierzcholki()[u].getNumerySąsiadów()[nrSasiada]);
+                            //System.out.println(tmpWierzcholki[u].getNumerySąsiadów()[nrSasiada]);
+                            //System.out.println(graf.getWierzcholki()[u].getNumerySąsiadów()[nrSasiada]);
                             tmpWierzcholki[u].setNumerSasiada(nrSasiada, -1);
-                            System.out.println(tmpWierzcholki[u].getNumerySąsiadów()[nrSasiada]);
-                            System.out.println(graf.getWierzcholki()[u].getNumerySąsiadów()[nrSasiada]);
+                            //.out.println(tmpWierzcholki[u].getNumerySąsiadów()[nrSasiada]);
+                            //.out.println(graf.getWierzcholki()[u].getNumerySąsiadów()[nrSasiada]);
                             nrSasiada++;
                             break;
                         }
