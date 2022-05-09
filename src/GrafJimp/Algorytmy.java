@@ -1,5 +1,8 @@
 package GrafJimp;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Algorytmy {
 
 
@@ -9,6 +12,7 @@ public class Algorytmy {
             kolor[w.getNumer()] = 0;
             rodzic[w.getNumer()] = null;
             odleglosc[w.getNumer()] = -1;
+            //System.out.println(Arrays.toString(w.getNumerySąsiadów()));
         }
 
         kolor[poczatekBFS] = 1;
@@ -44,6 +48,9 @@ public class Algorytmy {
         int[] poprzednik = new int[graf.getLiczbaWierzchołków()];
         int[] kolejka = new int [4*graf.getLiczbaWierzchołków()];
 
+        ArrayList<Krawedz> listaKrawedzi;
+        ArrayList<ArrayList<Krawedz>> lista = new ArrayList<>();
+
         int u;
 
         int poczatek = 0;
@@ -63,7 +70,13 @@ public class Algorytmy {
         int min_i = poczatekDijkstra;
         int tmp;
         int nrSasiada;
-        Wierzcholek [] tmpWierzcholki = graf.getWierzcholki();
+
+        Wierzcholek [] tmpWierzcholki = new Wierzcholek[graf.getLiczbaWierzchołków()];
+        for(int i =0; i<graf.getLiczbaWierzchołków();i++) {
+            tmpWierzcholki[i] = new Wierzcholek(graf.getWierzcholki()[i]);
+        }
+        System.out.println("Przed");
+
         while(poczatek != koniec){
 
             for(int i = poczatek; i < koniec; i++){
@@ -87,7 +100,12 @@ public class Algorytmy {
                             odleglosci[i] = odleglosci[u] + k.getWaga();
                             kolejka[koniec++] = i;
                             poprzednik[i] = u;
-                            tmpWierzcholki[u].getNumerySąsiadów()[nrSasiada++] = -1;
+                            System.out.println(tmpWierzcholki[u].getNumerySąsiadów()[nrSasiada]);
+                            System.out.println(graf.getWierzcholki()[u].getNumerySąsiadów()[nrSasiada]);
+                            tmpWierzcholki[u].setNumerSasiada(nrSasiada, -1);
+                            System.out.println(tmpWierzcholki[u].getNumerySąsiadów()[nrSasiada]);
+                            System.out.println(graf.getWierzcholki()[u].getNumerySąsiadów()[nrSasiada]);
+                            nrSasiada++;
                             break;
                         }
                     }
