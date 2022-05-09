@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Interfejs extends JFrame implements ActionListener {
@@ -14,6 +15,7 @@ public class Interfejs extends JFrame implements ActionListener {
     private Algorytmy algorytmy = new Algorytmy();
     private int początekBFS = 0;
     private int początekDijkstra = 0;
+    private int koniecDjikstry;
 
     JPanel poleNaPrzyciski = new JPanel();
     JPanel poleNaKomunikaty = new JPanel();
@@ -138,7 +140,7 @@ public class Interfejs extends JFrame implements ActionListener {
             poleNaGraf.setTablicaBFS(odległość);
 
             for(int i=0;i<graf.getLiczbaWierzchołków();i++){
-                if(odległość[i]==-1 && i!=początekBFS) {
+                if(odległość[i]==-1 && i!=początekBFS) {;
                     break;
                 }
                 if(i==graf.getLiczbaWierzchołków()-1){
@@ -146,17 +148,22 @@ public class Interfejs extends JFrame implements ActionListener {
                     repaint();
                 }else{
                     komunikaty.setText("Graf nie jest spójny");
+                    repaint();
                 }
             }
         }
 
         if(e.getSource() == przyciksDijkstra) {
-            komunikaty.setText("wciskam Dijkste");
+
+            komunikaty.setText("Wciskam Dijkste");
+            koniecDjikstry = graf.getLiczbaWierzchołków() - 1;
+
             double [] odległości = new double[graf.getLiczbaWierzchołków()];
             algorytmy.wykonajAlgorytmDijkstry(graf, początekDijkstra, odległości);
             for(int i =0;i<graf.getLiczbaWierzchołków();i++){
                 System.out.println(odległości[i]);
             }
+            komunikaty.setText("Najkrótsza droga z wierzchołka 0 do wierzchołka " + koniecDjikstry + " wynosi " + odległości[koniecDjikstry]);
         }
 
         if(e.getSource() == przyciskGeneracja) {
