@@ -20,6 +20,7 @@ public class Rysowanie extends JPanel {
 
     private int wysokoscJednostki;
     private int szerokoscJednostki;
+    private int jednostka;
 
     Rysowanie (Graf g, JLabel k) {
 
@@ -80,8 +81,8 @@ public class Rysowanie extends JPanel {
             setSzerekosc(this);
             setWysokosc(this);
 
-            wysokoscJednostki = getWysokosc() / (graf.getKolumny() + 1);
-            szerokoscJednostki = getSzerokosc() / (graf.getWiersze() + 1);
+            wysokoscJednostki = (getWysokosc()) / (graf.getWiersze() + 1);
+            szerokoscJednostki = getSzerokosc() / (graf.getKolumny() + 1);
 
             if(wysokoscJednostki > szerokoscJednostki) {
                 promien = szerokoscJednostki / 4;
