@@ -38,6 +38,10 @@ public class Analizator {
                     skanerLinii = new Scanner(nowaLinia).useLocale(Locale.US);
                     Wierzcholek wierzcholek = new Wierzcholek(i);
 
+                    for(int j = 0; j < 4; j++) {
+                        wierzcholek.setWagiPolaczen(j, graf.getWagaMax() + 1);
+                    }
+
                     System.out.println(skanerLinii.hasNextDouble());
                     System.out.println(skanerLinii.hasNextInt());
 
@@ -94,8 +98,16 @@ public class Analizator {
         double waga;
         int sasiad;
 
+        for(int i = 0; i < graf.getLiczbaWierzchołków(); i++) {
+            
+        }
+
         for( int i = 0; i < graf.getKolumny() * graf.getWiersze(); i++) {
             Wierzcholek wierzcholek = new Wierzcholek(i);
+
+            for(int j = 0; j < 4; j++) {
+                wierzcholek.setWagiPolaczen(j, graf.getWagaMax() + 1);
+            }
 
             System.out.println("wierzchołek " + i);
             System.out.println("sąsiedzi:");

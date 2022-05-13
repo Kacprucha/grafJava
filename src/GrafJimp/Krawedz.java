@@ -24,5 +24,6 @@ public class Krawedz {
     @Override
     public String toString() {
         return "Krawędź{" + "waga=" + waga + '}';
+        //return "Krawędź{" + "WP =" + polaczenie[0] + " WK = " + polaczenie[1] + '}';
     }
 }

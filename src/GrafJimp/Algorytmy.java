@@ -1,5 +1,6 @@
 package GrafJimp;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -44,12 +45,17 @@ public class Algorytmy {
         }
     }
 
-    public void wykonajAlgorytmDijkstry(Graf graf, int poczatekDijkstra, double [] odleglosci){
+    public void wykonajAlgorytmDijkstry(Graf graf, int poczatekDijkstra, double [] odleglosci, Rysowanie r){
         int[] poprzednik = new int[graf.getLiczbaWierzchołków()];
         int[] kolejka = new int [4*graf.getLiczbaWierzchołków()];
 
         ArrayList<Krawedz> listaKrawedzi;
         ArrayList<ArrayList<Krawedz>> lista = new ArrayList<>();
+
+        for(int i = 0; i < graf.getLiczbaWierzchołków(); i++) {
+            listaKrawedzi = new ArrayList<>();
+            lista.add(listaKrawedzi);
+        }
 
         int u;
 
@@ -75,7 +81,6 @@ public class Algorytmy {
         for(int i =0; i<graf.getLiczbaWierzchołków();i++) {
             tmpWierzcholki[i] = new Wierzcholek(graf.getWierzcholki()[i]);
         }
-        //System.out.println("Przed");
 
         while(poczatek != koniec){
 
@@ -92,12 +97,22 @@ public class Algorytmy {
             u = kolejka[poczatek];
             nrSasiada = 0;
             for(int i : tmpWierzcholki[u].getNumerySąsiadów()){
-
                 if(i != -1){
                     for(int j = 0; j < graf.getLiczbaKrawedzi(); j++){
                         Krawedz k = graf.getKrawedzi()[j];
                         if(k.getPolaczenie()[0] == u && k.getPolaczenie()[1] == i && odleglosci[i] > odleglosci[u] + k.getWaga()){
                             odleglosci[i] = odleglosci[u] + k.getWaga();
+
+                            lista.get(i).clear();
+                            for(int l = 0; l < lista.get(u).size(); l++) {
+                                if(!lista.get(i).contains(lista.get(u).get(l))) {
+                                    lista.get(i).add(lista.get(u).get(l));
+                                }
+                            }
+                            if(!lista.get(i).contains(k)) {
+                                lista.get(i).add(k);
+                            }
+
                             kolejka[koniec++] = i;
                             poprzednik[i] = u;
                             //System.out.println(tmpWierzcholki[u].getNumerySąsiadów()[nrSasiada]);
@@ -111,8 +126,8 @@ public class Algorytmy {
                     }
                 }
             }
-            poczatek++;
+            poczatek++;;
         }
-
+        r.setListaDji(lista);
     }
 }

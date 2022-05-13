@@ -4,23 +4,26 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 public class Rysowanie extends JPanel {
 
     private int szerokosc;
     private int wysokosc;
-    private Graf graf;
-    private JLabel komunikaty;
+    private final Graf graf;
+    private final JLabel komunikaty;
     private Wezel[] tablicaWezlow;
 
     private boolean BFS = false;
     private int[] tablicaBFS;
 
     private boolean djikstra = false;
+    private ArrayList<ArrayList<Krawedz>> listaDji;
+    private int koniecDji;
+    private int poczatekDji;
 
     private int wysokoscJednostki;
     private int szerokoscJednostki;
-    private int jednostka;
 
     Rysowanie (Graf g, JLabel k) {
 
@@ -54,6 +57,23 @@ public class Rysowanie extends JPanel {
 
     public void setTablicaBFS(int[] t) {
         tablicaBFS = t;
+    }
+
+    public void kliknientyDji() {
+        djikstra = true;
+    }
+    public void wyczyszczonyDji() {
+        djikstra = false;
+    }
+
+    public void setKoniecDji(int k) {
+        koniecDji = k;
+    }
+    public void setPoczatekDji(int p) {
+        poczatekDji = p;
+    }
+    public void setListaDji(ArrayList<ArrayList<Krawedz>> l) {
+        listaDji = l;
     }
 
     public void paint(Graphics g) {
@@ -191,6 +211,51 @@ public class Rysowanie extends JPanel {
 
             } else if(djikstra) {
 
+                odlegolosc = promien / 3;
+                promien = promien / 2;
+                g2D.setStroke(new BasicStroke((float) (0.5 * odlegolosc)));
+                g2D.setColor(wybierzKolor(graf.getWagaMin()));
+
+                for(Krawedz k : listaDji.get(koniecDji)) {
+
+                    try {
+                            konceKrawedzi = k.getPolaczenie();
+
+                            if (konceKrawedzi[1] == konceKrawedzi[0] - 1) {
+                                xp = wspolrzedneX[konceKrawedzi[0]] + promien;
+                                yp = wspolrzedneY[konceKrawedzi[0]];
+
+                                xk = wspolrzedneX[konceKrawedzi[1]] + promien;
+                                yk = wspolrzedneY[konceKrawedzi[1]] + (2 * promien);
+                            }
+
+                            if (konceKrawedzi[1] == konceKrawedzi[0] + graf.getWiersze()) {
+                                xp = wspolrzedneX[konceKrawedzi[0]] + (2 * promien);
+                                yp = wspolrzedneY[konceKrawedzi[0]] + promien;
+
+                                xk = wspolrzedneX[konceKrawedzi[1]];
+                                yk = wspolrzedneY[konceKrawedzi[1]] + promien;
+                            }
+
+                            if (konceKrawedzi[1] == konceKrawedzi[0] + 1) {
+                                xp = wspolrzedneX[konceKrawedzi[0]] + promien;
+                                yp = wspolrzedneY[konceKrawedzi[0]] + (2 * promien);
+
+                                xk = wspolrzedneX[konceKrawedzi[1]] + promien;
+                                yk = wspolrzedneY[konceKrawedzi[1]];
+                            }
+
+                            if (konceKrawedzi[1] == konceKrawedzi[0] - graf.getWiersze()) {
+                                xp = wspolrzedneX[konceKrawedzi[0]];
+                                yp = wspolrzedneY[konceKrawedzi[0]] + promien;
+
+                                xk = wspolrzedneX[konceKrawedzi[1]] + (2 * promien);
+                                yk = wspolrzedneY[konceKrawedzi[1]] + promien;
+                            }
+
+                            g2D.drawLine(xp, yp, xk, yk);
+                    } catch (NullPointerException ignored) {}
+                }
             } else {
                 Krawedz[] listaKrawedzi = graf.getKrawedzi();
                 odlegolosc = promien / 4;
@@ -318,9 +383,9 @@ public class Rysowanie extends JPanel {
 
     public static class Wezel extends JLabel implements MouseListener {
 
-        private int numer;
-        private Graf graf;
-        private JLabel komunikaty;
+        private final int numer;
+        private final Graf graf;
+        private final JLabel komunikaty;
 
         Wezel(int x, int y, int r ,int n, JLabel kom, Graf g) {
             numer = n;
