@@ -12,6 +12,7 @@ public class Rysowanie extends JPanel {
     private int wysokosc;
     private final Graf graf;
     private final JLabel komunikaty;
+    private final Interfejs interfejs;
     private Wezel[] tablicaWezlow;
 
     private boolean BFS = false;
@@ -25,10 +26,11 @@ public class Rysowanie extends JPanel {
     private int wysokoscJednostki;
     private int szerokoscJednostki;
 
-    Rysowanie (Graf g, JLabel k) {
+    Rysowanie (Graf g, JLabel k, Interfejs inte) {
 
         graf = g;
         komunikaty = k;
+        interfejs = inte;
 
         this.setPreferredSize(new Dimension(1, 1));
         this.setLayout(null);
@@ -69,8 +71,14 @@ public class Rysowanie extends JPanel {
     public void setKoniecDji(int k) {
         koniecDji = k;
     }
+    public int getKoniecDji() {
+        return koniecDji;
+    }
     public void setPoczatekDji(int p) {
         poczatekDji = p;
+    }
+    public int getPoczatekDji() {
+        return poczatekDji;
     }
     public void setListaDji(ArrayList<ArrayList<Krawedz>> l) {
         listaDji = l;
@@ -130,7 +138,7 @@ public class Rysowanie extends JPanel {
 
                 g2D.fillOval(x, y , promien, promien);
 
-                Wezel w = new Wezel(x, y, promien, i, komunikaty, graf);
+                Wezel w = new Wezel(x, y, promien, i, komunikaty, graf, this, interfejs);
                 this.tablicaWezlow[i] = w;
                 this.add(w);
 
@@ -386,11 +394,16 @@ public class Rysowanie extends JPanel {
         private final int numer;
         private final Graf graf;
         private final JLabel komunikaty;
+        private final Rysowanie rysowanie;
+        private final Interfejs interfejs;
 
-        Wezel(int x, int y, int r ,int n, JLabel kom, Graf g) {
+        Wezel(int x, int y, int r ,int n, JLabel kom, Graf g, Rysowanie rys, Interfejs inte) {
             numer = n;
             komunikaty = kom;
             graf = g;
+            rysowanie = rys;
+            interfejs = inte;
+
 
             this.setBounds(x, y, r ,r);
             this.addMouseListener(this);
@@ -402,7 +415,12 @@ public class Rysowanie extends JPanel {
 
         @Override
         public void mouseClicked(MouseEvent e) {
+            if(rysowanie.djikstra) {
+                rysowanie.setKoniecDji(numer);
 
+                interfejs.repaint();
+                komunikaty.setText("Ustawiono koniecDji na wierzchołek " + numer);
+            }
         }
 
         @Override
@@ -422,7 +440,17 @@ public class Rysowanie extends JPanel {
 
         @Override
         public void mouseExited(MouseEvent e) {
-            komunikaty.setText("Wygenerowano graf: " + graf.getKolumny() + "x" + graf.getWiersze());
+            if(rysowanie.BFS) {
+                if(graf.isSpojny()) {
+                    komunikaty.setText("Graf jest spójny");
+                } else {
+                    komunikaty.setText("Graf nie jest spójny");
+                }
+            } else if (rysowanie.djikstra) {
+                komunikaty.setText("Najkrótsza droga z wierzchołka " + rysowanie.getPoczatekDji() + " do wierzchołka "  + rysowanie.getKoniecDji() + " wynosi " + graf.getNajkrotsza());
+            } else {
+                komunikaty.setText("Wygenerowano graf: " + graf.getKolumny() + "x" + graf.getWiersze());
+            }
         }
     }
 }

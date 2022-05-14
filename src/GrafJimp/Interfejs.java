@@ -101,7 +101,7 @@ public class Interfejs extends JFrame implements ActionListener {
         komunikaty.setHorizontalAlignment(JLabel.CENTER);
         komunikaty.setFont(new Font("Times New Roma", Font.PLAIN, 20));
 
-        poleNaGraf = new Rysowanie(graf, komunikaty);
+        poleNaGraf = new Rysowanie(graf, komunikaty, this);
 
         this.setTitle("Analizator grafów");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -146,9 +146,11 @@ public class Interfejs extends JFrame implements ActionListener {
                 }
                 if(i==graf.getLiczbaWierzchołków()-1){
                     komunikaty.setText("Graf jest spójny");
+                    graf.setSpojny(true);
                     repaint();
                 }else{
                     komunikaty.setText("Graf nie jest spójny");
+                    graf.setSpojny(false);
                     repaint();
                 }
             }
@@ -159,16 +161,15 @@ public class Interfejs extends JFrame implements ActionListener {
             komunikaty.setText("Wciskam Dijkste");
             poleNaGraf.kliknientyDji();
             poleNaGraf.wyczyszczonyBFS();
-            koniecDjikstry = graf.getLiczbaWierzchołków() - 1;
 
             double [] odległości = new double[graf.getLiczbaWierzchołków()];
             algorytmy.wykonajAlgorytmDijkstry(graf, początekDijkstra, odległości, poleNaGraf);
             for(int i =0;i<graf.getLiczbaWierzchołków();i++){
                 System.out.println(odległości[i]);
             }
-            poleNaGraf.setKoniecDji(koniecDjikstry);
             poleNaGraf.setPoczatekDji(początekDijkstra);
-            komunikaty.setText("Najkrótsza droga z wierzchołka 0 do wierzchołka " + koniecDjikstry + " wynosi " + odległości[koniecDjikstry]);
+            komunikaty.setText("Najkrótsza droga z wierzchołka 0 do wierzchołka " + poleNaGraf.getKoniecDji() + " wynosi " + odległości[poleNaGraf.getKoniecDji()]);
+            graf.setNajkrotsza(odległości[poleNaGraf.getKoniecDji()]);
             repaint();
         }
 
@@ -203,17 +204,19 @@ public class Interfejs extends JFrame implements ActionListener {
                 if (error) {
                     komunikaty.setText("Błędnie podano wymiary grafu!");
                 } else {
-                    komunikaty.setText("generuje graf: " + graf.getKolumny() + "x" + graf.getWiersze());
+                    komunikaty.setText("Generuje graf: " + graf.getKolumny() + "x" + graf.getWiersze());
 
                     przyciskiAlgorytmy.clearSelection();
                     poleNaGraf.wyczyszczonyBFS();
                     poleNaGraf.wyczyszczonyDji();
 
                     Analizator.generuj(graf);
+                    poleNaGraf.setKoniecDji(graf.getLiczbaWierzchołków() - 1);
+
                     repaint();
                 }
             } catch (NullPointerException r) {
-                komunikaty.setText("wychodzę z generacji");
+                komunikaty.setText("Wychodzę z generacji");
             }
         }
 
@@ -228,6 +231,7 @@ public class Interfejs extends JFrame implements ActionListener {
                 komunikaty.setText("Wczytuje plik o nazwie " + nazwa);
 
                 Analizator.czytaj(graf, plik);
+                poleNaGraf.setKoniecDji(graf.getLiczbaWierzchołków() - 1);
 
                 przyciskiAlgorytmy.clearSelection();
                 poleNaGraf.wyczyszczonyBFS();

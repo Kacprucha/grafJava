@@ -19,9 +19,13 @@ public class Graf {
 
     private File plikZapisu;
 
+    private boolean spojny;
+    private double najkrotsza;
+
     Graf() {
         this.setWagaMax(10);
         this.setWagaMin(0);
+        this.spojny = false;
     }
 
     public void setKolumny(int k) {
@@ -83,6 +87,20 @@ public class Graf {
         this.liczbaKrawedzi = liczbaKrawedzi;
     }
     public int getLiczbaKrawedzi() { return liczbaKrawedzi; }
+
+    public boolean isSpojny() {
+        return spojny;
+    }
+    public void setSpojny(boolean s) {
+        this.spojny = s;
+    }
+
+    public double getNajkrotsza() {
+        return najkrotsza;
+    }
+    public void setNajkrotsza(double d) {
+        this.najkrotsza = d;
+    }
 
 
     public void dodajKrawedz(Krawedz krawedz){
