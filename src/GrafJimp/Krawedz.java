@@ -20,6 +20,9 @@ public class Krawedz {
         polaczenie[0]=poczatek;
         polaczenie[1]=koniec;
     }
+    public void setWaga(double w){
+        waga=w;
+    }
 
     @Override
     public String toString() {

@@ -7,7 +7,7 @@ import java.util.*;
 public class Analizator {
     static private String nazwaPliku;
 
-    Analizator() {
+    public Analizator() {
 
     }
 

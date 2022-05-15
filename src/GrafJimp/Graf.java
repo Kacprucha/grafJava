@@ -21,7 +21,7 @@ public class Graf {
 
     private boolean spojny;
 
-    Graf() {
+    public Graf() {
         this.setWagaMax(10);
         this.setWagaMin(0);
         this.spojny = false;

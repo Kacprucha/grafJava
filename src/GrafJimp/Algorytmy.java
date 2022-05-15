@@ -128,6 +128,7 @@ public class Algorytmy {
             }
             poczatek++;;
         }
-        r.setListaDji(lista);
+        if(r!=null)
+            r.setListaDji(lista);
     }
 }
