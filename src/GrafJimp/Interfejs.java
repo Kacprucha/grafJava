@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Interfejs extends JFrame implements ActionListener {
@@ -31,6 +32,10 @@ public class Interfejs extends JFrame implements ActionListener {
     JButton przyciskZapisz;
     JButton przyciskPomoc;
     JButton przyciskWyczysc;
+
+    JTextField poleNaKolumny;
+    JTextField poleNaWiersze;
+    JTextField poleNaPoczatek;
 
     ButtonGroup przyciskiAlgorytmy;
 
@@ -86,6 +91,18 @@ public class Interfejs extends JFrame implements ActionListener {
         przyciskWyczysc.setText("Wyczyść");
         przyciskWyczysc.setFocusable(false);
 
+        poleNaKolumny = new JTextField();
+        poleNaKolumny.setPreferredSize(new Dimension(100, 20));
+        poleNaKolumny.setText("liczba kolumn");
+
+        poleNaWiersze = new JTextField();
+        poleNaWiersze.setPreferredSize(new Dimension(100, 20));
+        poleNaWiersze.setText("liczba wierszy");
+
+        poleNaPoczatek = new JTextField();
+        poleNaPoczatek.setPreferredSize(new Dimension(100, 20));
+        poleNaPoczatek.setText("początek Djikstry");
+
         //poleNaPrzyciski.setBackground(Color.BLACK);
         //poleNaPrzyciski.setOpaque(true);
         poleNaPrzyciski.setPreferredSize(new Dimension(150, 100));
@@ -115,10 +132,13 @@ public class Interfejs extends JFrame implements ActionListener {
         poleNaKomunikaty.add(komunikaty);
 
         poleNaPrzyciski.add(przyciskWczytaj);
+        poleNaPrzyciski.add(poleNaKolumny);
+        poleNaPrzyciski.add(poleNaWiersze);
         poleNaPrzyciski.add(przyciskGeneracja);
         poleNaPrzyciski.add(przyciskWagi);
         poleNaPrzyciski.add(przyciskBFS);
         poleNaPrzyciski.add(przyciksDijkstra);
+        poleNaPrzyciski.add(poleNaPoczatek);
         poleNaPrzyciski.add(przyciskZapisz);
         poleNaPrzyciski.add(przyciskWyczysc);
         poleNaPrzyciski.add(przyciskPomoc);
@@ -158,9 +178,18 @@ public class Interfejs extends JFrame implements ActionListener {
 
         if(e.getSource() == przyciksDijkstra) {
 
-            komunikaty.setText("Wciskam Dijkste");
             poleNaGraf.kliknientyDji();
             poleNaGraf.wyczyszczonyBFS();
+
+            try{
+                początekDijkstra = Integer.parseInt(poleNaPoczatek.getText());
+            } catch(NumberFormatException r) {
+                if(!(Objects.equals(poleNaPoczatek.getText(), "początek Djikstry"))) {
+                    JOptionPane.showMessageDialog(null, "Proszę podać liczby naturalną jako początek dla algorytmu Djikstra!\nProgram automatycznie przypisuje początek jako wierzchołek 0.", "Błąd", JOptionPane.ERROR_MESSAGE);
+                    początekDijkstra = 0;
+                }
+                poleNaPoczatek.setText("0");
+            }
 
             double [] odległości = new double[graf.getLiczbaWierzchołków()];
             algorytmy.wykonajAlgorytmDijkstry(graf, początekDijkstra, odległości, poleNaGraf);
@@ -168,14 +197,41 @@ public class Interfejs extends JFrame implements ActionListener {
                 System.out.println(odległości[i]);
             }
             poleNaGraf.setPoczatekDji(początekDijkstra);
-            komunikaty.setText("Najkrótsza droga z wierzchołka 0 do wierzchołka " + poleNaGraf.getKoniecDji() + " wynosi " + odległości[poleNaGraf.getKoniecDji()]);
-            graf.setNajkrotsza(odległości[poleNaGraf.getKoniecDji()]);
+            komunikaty.setText("Najkrótsza droga z wierzchołka " + początekDijkstra + " do wierzchołka " + poleNaGraf.getKoniecDji() + " wynosi " + odległości[poleNaGraf.getKoniecDji()]);
+            poleNaGraf.setOdleglosci(odległości);
             repaint();
         }
 
         if(e.getSource() == przyciskGeneracja) {
             boolean error = false;
 
+            try {
+                graf.setKolumny(Integer.parseInt(poleNaKolumny.getText()));
+                graf.setWiersze(Integer.parseInt(poleNaWiersze.getText()));
+
+                if(graf.getWiersze() <= 0 || graf.getKolumny() <= 0) {
+                    error = true;
+                }
+
+                if (error) {
+                    komunikaty.setText("Błędnie podano wymiary grafu!");
+                } else {
+                    komunikaty.setText("Generuje graf: " + graf.getKolumny() + "x" + graf.getWiersze());
+
+                    przyciskiAlgorytmy.clearSelection();
+                    poleNaGraf.wyczyszczonyBFS();
+                    poleNaGraf.wyczyszczonyDji();
+
+                    Analizator.generuj(graf);
+                    poleNaGraf.setKoniecDji(graf.getLiczbaWierzchołków() - 1);
+
+                    repaint();
+                }
+            } catch (NumberFormatException r) {
+                komunikaty.setText("Proszę wpisać w odpowiednie pola liczbę kolumn i wierszy! Muszą być to liczby naturalne > 0.");
+            }
+
+            /*
             try {
                 String kolumnyIwiersze = JOptionPane.showInputDialog("Proszę podać liczbę kolumn i wierszy generowanego grafu:");
                 Scanner skaner = new Scanner(kolumnyIwiersze);
@@ -218,6 +274,7 @@ public class Interfejs extends JFrame implements ActionListener {
             } catch (NullPointerException r) {
                 komunikaty.setText("Wychodzę z generacji");
             }
+            */
         }
 
         if(e.getSource() == przyciskWczytaj) {

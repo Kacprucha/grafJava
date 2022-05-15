@@ -22,6 +22,7 @@ public class Rysowanie extends JPanel {
     private ArrayList<ArrayList<Krawedz>> listaDji;
     private int koniecDji;
     private int poczatekDji;
+    private double[] odleglosci;
 
     private int wysokoscJednostki;
     private int szerokoscJednostki;
@@ -82,6 +83,13 @@ public class Rysowanie extends JPanel {
     }
     public void setListaDji(ArrayList<ArrayList<Krawedz>> l) {
         listaDji = l;
+    }
+
+    public double[] getOdleglosci() {
+        return odleglosci;
+    }
+    public void setOdleglosci(double[] odleglosci) {
+        this.odleglosci = odleglosci;
     }
 
     public void paint(Graphics g) {
@@ -419,7 +427,7 @@ public class Rysowanie extends JPanel {
                 rysowanie.setKoniecDji(numer);
 
                 interfejs.repaint();
-                komunikaty.setText("Ustawiono koniecDji na wierzchołek " + numer);
+                komunikaty.setText("Ustawiono koniec Djikstry na wierzchołek " + numer);
             }
         }
 
@@ -447,7 +455,7 @@ public class Rysowanie extends JPanel {
                     komunikaty.setText("Graf nie jest spójny");
                 }
             } else if (rysowanie.djikstra) {
-                komunikaty.setText("Najkrótsza droga z wierzchołka " + rysowanie.getPoczatekDji() + " do wierzchołka "  + rysowanie.getKoniecDji() + " wynosi " + graf.getNajkrotsza());
+                komunikaty.setText("Najkrótsza droga z wierzchołka " + rysowanie.getPoczatekDji() + " do wierzchołka "  + rysowanie.getKoniecDji() + " wynosi " + rysowanie.getOdleglosci()[rysowanie.getKoniecDji()]);
             } else {
                 komunikaty.setText("Wygenerowano graf: " + graf.getKolumny() + "x" + graf.getWiersze());
             }

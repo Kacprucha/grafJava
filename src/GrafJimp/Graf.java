@@ -20,7 +20,6 @@ public class Graf {
     private File plikZapisu;
 
     private boolean spojny;
-    private double najkrotsza;
 
     Graf() {
         this.setWagaMax(10);
@@ -95,12 +94,6 @@ public class Graf {
         this.spojny = s;
     }
 
-    public double getNajkrotsza() {
-        return najkrotsza;
-    }
-    public void setNajkrotsza(double d) {
-        this.najkrotsza = d;
-    }
 
 
     public void dodajKrawedz(Krawedz krawedz){
