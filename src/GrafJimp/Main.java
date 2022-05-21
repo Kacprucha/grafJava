@@ -5,6 +5,7 @@ public class Main {
 
         Graf graf = new Graf();
 
-        new Interfejs(graf);
+        Interfejs i = new Interfejs(graf);
+        i.setVisible(true);
     }
 }

@@ -1,8 +1,6 @@
 package GrafJimp;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Algorytmy {
 
@@ -45,7 +43,7 @@ public class Algorytmy {
         }
     }
 
-    public void wykonajAlgorytmDijkstry(Graf graf, int poczatekDijkstra, double [] odleglosci, Rysowanie r){
+    public void wykonajAlgorytmDijkstry(Graf graf, int poczatekDijkstra, double [] odleglosci, PoleNaGraf r){
         int[] poprzednik = new int[graf.getLiczbaWierzchołków()];
         int[] kolejka = new int [4*graf.getLiczbaWierzchołków()];
 

@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -20,7 +19,7 @@ public class Interfejs extends JFrame implements ActionListener {
 
     JPanel poleNaPrzyciski = new JPanel();
     JPanel poleNaKomunikaty = new JPanel();
-    Rysowanie poleNaGraf;
+    PoleNaGraf poleNaGraf;
     Border ramkaBoczna = BorderFactory.createMatteBorder(150, 100, 0, 100, Color.LIGHT_GRAY);
     Border ramkaDolna = BorderFactory.createLineBorder(Color.BLACK, 3);
     JLabel komunikaty = new JLabel();
@@ -44,16 +43,12 @@ public class Interfejs extends JFrame implements ActionListener {
 
         przyciskBFS = new JRadioButton("BFS");
         przyciskBFS.setBackground(Color.LIGHT_GRAY);
-        //przyciskBFS.setBounds(50, 32, 70, 35);
         przyciskBFS.addActionListener(this);
-        //przyciskBFS.setText("BFS");
         przyciskBFS.setFocusable(false);
 
         przyciksDijkstra = new JRadioButton("Dijkstra");
         przyciksDijkstra.setBackground(Color.LIGHT_GRAY);
-        //przyciksDijkstra.setBounds(140, 32, 100, 35);
         przyciksDijkstra.addActionListener(this);
-        //przyciksDijkstra.setText("Dijkstra");
         przyciksDijkstra.setFocusable(false);
 
         przyciskiAlgorytmy = new ButtonGroup();
@@ -61,7 +56,6 @@ public class Interfejs extends JFrame implements ActionListener {
         przyciskiAlgorytmy.add(przyciksDijkstra);
 
         przyciskGeneracja = new JButton();
-        //przyciskGeneracja.setBounds(260, 32, 200, 35);
         przyciskGeneracja.addActionListener(this);
         przyciskGeneracja.setText("Wygeneruj graf");
         przyciskGeneracja.setFocusable(false);
@@ -103,14 +97,11 @@ public class Interfejs extends JFrame implements ActionListener {
         poleNaPoczatek.setPreferredSize(new Dimension(100, 20));
         poleNaPoczatek.setText("początek Djikstry");
 
-        //poleNaPrzyciski.setBackground(Color.BLACK);
-        //poleNaPrzyciski.setOpaque(true);
         poleNaPrzyciski.setPreferredSize(new Dimension(150, 100));
         poleNaPrzyciski.setLayout(new FlowLayout());
+        poleNaPrzyciski.setBackground(Color.lightGray);
         poleNaPrzyciski.setBorder(ramkaBoczna);
 
-        //poleNaKomunikaty.setBackground(Color.BLUE);
-        //poleNaKomunikaty.setOpaque(true);
         poleNaKomunikaty.setPreferredSize(new Dimension(100, 50));
         poleNaKomunikaty.setLayout(new BorderLayout());
         poleNaKomunikaty.setBorder(ramkaDolna);
@@ -118,7 +109,7 @@ public class Interfejs extends JFrame implements ActionListener {
         komunikaty.setHorizontalAlignment(JLabel.CENTER);
         komunikaty.setFont(new Font("Times New Roma", Font.PLAIN, 20));
 
-        poleNaGraf = new Rysowanie(graf, komunikaty, this);
+        poleNaGraf = new PoleNaGraf(graf, komunikaty, this);
 
         this.setTitle("Analizator grafów");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -142,8 +133,6 @@ public class Interfejs extends JFrame implements ActionListener {
         poleNaPrzyciski.add(przyciskZapisz);
         poleNaPrzyciski.add(przyciskWyczysc);
         poleNaPrzyciski.add(przyciskPomoc);
-
-        this.setVisible(true);
     }
 
     @Override
@@ -230,51 +219,6 @@ public class Interfejs extends JFrame implements ActionListener {
             } catch (NumberFormatException r) {
                 komunikaty.setText("Proszę wpisać w odpowiednie pola liczbę kolumn i wierszy! Muszą być to liczby naturalne > 0.");
             }
-
-            /*
-            try {
-                String kolumnyIwiersze = JOptionPane.showInputDialog("Proszę podać liczbę kolumn i wierszy generowanego grafu:");
-                Scanner skaner = new Scanner(kolumnyIwiersze);
-                if (skaner.hasNextInt()) {
-                    graf.setKolumny(skaner.nextInt());
-                } else {
-                    JOptionPane.showMessageDialog(null, "Proszę podać liczby całkowite!", "Błąd", JOptionPane.ERROR_MESSAGE);
-                    error = true;
-                }
-
-                if (!error) {
-                    if (skaner.hasNextInt()) {
-                        graf.setWiersze(skaner.nextInt());
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Proszę podać dwie liczby całkowite!", "Błąd", JOptionPane.ERROR_MESSAGE);
-                        error = true;
-                    }
-                }
-
-                if(graf.getWiersze() <= 0 || graf.getKolumny() <= 0) {
-                    error = true;
-                }
-
-                skaner.close();
-
-                if (error) {
-                    komunikaty.setText("Błędnie podano wymiary grafu!");
-                } else {
-                    komunikaty.setText("Generuje graf: " + graf.getKolumny() + "x" + graf.getWiersze());
-
-                    przyciskiAlgorytmy.clearSelection();
-                    poleNaGraf.wyczyszczonyBFS();
-                    poleNaGraf.wyczyszczonyDji();
-
-                    Analizator.generuj(graf);
-                    poleNaGraf.setKoniecDji(graf.getLiczbaWierzchołków() - 1);
-
-                    repaint();
-                }
-            } catch (NullPointerException r) {
-                komunikaty.setText("Wychodzę z generacji");
-            }
-            */
         }
 
         if(e.getSource() == przyciskWczytaj) {
