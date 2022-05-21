@@ -10,7 +10,6 @@ public class PoleNaGraf extends JPanel {
 
     private int szerokosc;
     private int wysokosc;
-    private JLabel skala = new JLabel();
 
     private final Graf graf;
     private final JLabel komunikaty;
@@ -103,15 +102,7 @@ public class PoleNaGraf extends JPanel {
 
         g2D.drawRect(0, this.getHeight() - 50, this.getWidth(), 50);
 
-        /*
-        skala.setBounds(100, 100, 100, 100);
-        skala.setBackground(Color.BLUE);
-        skala.setHorizontalTextPosition(JLabel.CENTER);
-        skala.setFont(new Font("Times New Roma", Font.PLAIN, 11));
-        skala.setText("dupa");
-        this.add(skala);
-        skala.setText("jfsnjfnsejfnsjfnsjbfjksbfeskjfbsekfjsebfjbsefbsekkjfjsek");
-        */
+        //new SkalaLiczb(this.getWidth() - 22, graf.getWagaMin(), graf.getWagaMax(), 5, this.getHeight() - 7, g2D);
 
         if(graf.getLiczbaWierzchołków() != 0) {
             int mnoznikY = 1;
@@ -154,14 +145,18 @@ public class PoleNaGraf extends JPanel {
             if(BFS) {
 
                 Rysowanie.rysowanieBFS(graf, promien, tablicaBFS, wysokoscJednostki, szerokoscJednostki, g2D);
+                new SkalaLiczb(this.getWidth() - 22, 0, graf.getKolumny() + graf.getWiersze() - 2, 5, this.getHeight() - 7, g2D);
 
             } else if(djikstra) {
 
                 Rysowanie.rysowaniejDjikstra(graf, promien, listaDji, wysokoscJednostki, szerokoscJednostki, koniecDji, g2D);
+                new SkalaLiczb(this.getWidth() - 22, graf.getWagaMin(), graf.getWagaMax(), 5, this.getHeight() - 7, g2D);
 
             } else {
 
                 Rysowanie.rysowanieGrafu(graf, promien, wysokoscJednostki, szerokoscJednostki, g2D);
+                new SkalaLiczb(this.getWidth() - 22, graf.getWagaMin(), graf.getWagaMax(), 5, this.getHeight() - 7, g2D);
+
             }
         }
 

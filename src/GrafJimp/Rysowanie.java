@@ -86,10 +86,9 @@ public class Rysowanie {
         g2D.setStroke(new BasicStroke((float) (0.5 * odlegolosc)));
         g2D.setColor(Kolory.wybierzKolorRGB(graf.getWagaMin(), graf.getWagaMax(), graf.getWagaMin()));
 
-
         for(int i = 0; i < tablicaBFS.length; i++) {
             int poczatek = tablicaBFS[i];
-            int bazowexp, bazoweyp, bazowexk, bazoweyk;
+            int bazowexp, bazoweyp, bazowexk, bazoweyk, waga;
 
             if (poczatek >= 0) {
                 poczatek = i;
@@ -109,6 +108,8 @@ public class Rysowanie {
                     try {
                         konceKrawedzi = k.getPolaczenie();
 
+                        waga = Math.max(tablicaBFS[konceKrawedzi[0]], tablicaBFS[konceKrawedzi[1]]);
+
                         bazowexp = ((((k.getPolaczenie()[0] / graf.getWiersze()) + 1) * szerokoscJednostki) - (promien * 2));
                         bazoweyp = (((k.getPolaczenie()[0] + 1) - (graf.getWiersze() * ((k.getPolaczenie()[0]) / graf.getWiersze()))) * wysokoscJednostki) - (promien * 2);
 
@@ -121,6 +122,8 @@ public class Rysowanie {
 
                             xk = bazowexk + promien;
                             yk = bazoweyk + (2 * promien);
+
+                            g2D.setColor(Kolory.wybierzKolorRGB(waga, graf.getKolumny() + graf.getWiersze() - 2, 0));
                         }
 
                         if (konceKrawedzi[1] == konceKrawedzi[0] + graf.getWiersze()) {
@@ -129,6 +132,8 @@ public class Rysowanie {
 
                             xk = bazowexk;
                             yk = bazoweyk + promien;
+
+                            g2D.setColor(Kolory.wybierzKolorRGB(waga, graf.getKolumny() + graf.getWiersze() - 2, 0));
                         }
 
                         if (konceKrawedzi[1] == konceKrawedzi[0] + 1) {
@@ -137,6 +142,8 @@ public class Rysowanie {
 
                             xk = bazowexk + promien;
                             yk = bazoweyk;
+
+                            g2D.setColor(Kolory.wybierzKolorRGB(waga, graf.getKolumny() + graf.getWiersze() - 2, 0));
                         }
 
                         if (konceKrawedzi[1] == konceKrawedzi[0] - graf.getWiersze()) {
@@ -145,6 +152,8 @@ public class Rysowanie {
 
                             xk = bazowexk + (2 * promien);
                             yk = bazoweyk + promien;
+
+                            g2D.setColor(Kolory.wybierzKolorRGB(waga, graf.getKolumny() + graf.getWiersze() - 2, 0));
                         }
 
                         g2D.drawLine(xp, yp, xk, yk);
