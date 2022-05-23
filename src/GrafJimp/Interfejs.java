@@ -6,11 +6,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class Interfejs extends JFrame implements ActionListener {
+public class Interfejs extends JFrame {
 
     private Graf graf;
     private Algorytmy algorytmy = new Algorytmy();
@@ -44,47 +43,239 @@ public class Interfejs extends JFrame implements ActionListener {
 
         przyciskBFS = new JRadioButton("BFS");
         przyciskBFS.setBackground(Color.LIGHT_GRAY);
-        przyciskBFS.addActionListener(this);
         przyciskBFS.setFocusable(false);
+        przyciskBFS.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (graf.getWierzcholki() != null) {
+                    komunikaty.setText("wciskam BFS");
+                    poleNaGraf.kliknientyBFS();
+                    poleNaGraf.wyczyszczonyDji();
+
+                    int[] kolor = new int[graf.getLiczbaWierzchołków()];
+                    Wierzcholek[] rodzic = new Wierzcholek[graf.getLiczbaWierzchołków()];
+                    int[] odległość = new int[graf.getLiczbaWierzchołków()];
+                    algorytmy.wykonajAlgorytmBFS(graf, kolor, rodzic, odległość, początekBFS);
+
+                    poleNaGraf.setTablicaBFS(odległość);
+
+                    for (int i = 0; i < graf.getLiczbaWierzchołków(); i++) {
+                        if (odległość[i] == -1 && i != początekBFS) {
+                            break;
+                        }
+                        if (i == graf.getLiczbaWierzchołków() - 1) {
+                            komunikaty.setText("Graf jest spójny");
+                            graf.setSpojny(true);
+                            repaint();
+                        } else {
+                            komunikaty.setText("Graf nie jest spójny");
+                            graf.setSpojny(false);
+                            repaint();
+                        }
+                    }
+                } else {
+                    komunikaty.setText("Nie wygenerowano / wczytano żadnego grafu aby rozpocząć analizę algorytmem.");
+                    przyciskiAlgorytmy.clearSelection();
+                }
+            }
+        });
 
         przyciksDijkstra = new JRadioButton("Dijkstra");
         przyciksDijkstra.setBackground(Color.LIGHT_GRAY);
-        przyciksDijkstra.addActionListener(this);
         przyciksDijkstra.setFocusable(false);
+        przyciksDijkstra.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (graf.getWierzcholki() != null) {
+
+                    poleNaGraf.kliknientyDji();
+                    poleNaGraf.wyczyszczonyBFS();
+
+                    try {
+                        początekDijkstra = Integer.parseInt(poleNaPoczatek.getText());
+                    } catch (NumberFormatException r) {
+                        if (!(Objects.equals(poleNaPoczatek.getText(), "początek Djikstry"))) {
+                            JOptionPane.showMessageDialog(null, "Proszę podać liczby naturalną jako początek dla algorytmu Djikstra!\nProgram automatycznie przypisuje początek jako wierzchołek 0.", "Błąd", JOptionPane.ERROR_MESSAGE);
+                            początekDijkstra = 0;
+                        }
+                        poleNaPoczatek.setText("0");
+                    }
+
+                    double[] odległości = new double[graf.getLiczbaWierzchołków()];
+                    algorytmy.wykonajAlgorytmDijkstry(graf, początekDijkstra, odległości, poleNaGraf);
+                    for (int i = 0; i < graf.getLiczbaWierzchołków(); i++) {
+                        System.out.println(odległości[i]);
+                    }
+                    poleNaGraf.setPoczatekDji(początekDijkstra);
+                    komunikaty.setText("Najkrótsza droga z wierzchołka " + początekDijkstra + " do wierzchołka " + poleNaGraf.getKoniecDji() + " wynosi " + odległości[poleNaGraf.getKoniecDji()]);
+                    poleNaGraf.setOdleglosci(odległości);
+                    repaint();
+                } else {
+                    komunikaty.setText("Nie wygenerowano / wczytano żadnego grafu aby rozpocząć analizę algorytmem.");
+                    przyciskiAlgorytmy.clearSelection();
+                }
+            }
+        });
 
         przyciskiAlgorytmy = new ButtonGroup();
         przyciskiAlgorytmy.add(przyciskBFS);
         przyciskiAlgorytmy.add(przyciksDijkstra);
 
         przyciskGeneracja = new JButton();
-        przyciskGeneracja.addActionListener(this);
         przyciskGeneracja.setText("Wygeneruj graf");
         przyciskGeneracja.setFocusable(false);
+        przyciskGeneracja.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                boolean error = false;
+
+                try {
+                    graf.setKolumny(Integer.parseInt(poleNaKolumny.getText()));
+                    graf.setWiersze(Integer.parseInt(poleNaWiersze.getText()));
+
+                    if (graf.getWiersze() <= 0 || graf.getKolumny() <= 0) {
+                        error = true;
+                    }
+
+                    if (error) {
+                        komunikaty.setText("Błędnie podano wymiary grafu!");
+                    } else {
+                        komunikaty.setText("Generuje graf: " + graf.getKolumny() + "x" + graf.getWiersze());
+
+                        przyciskiAlgorytmy.clearSelection();
+                        poleNaGraf.wyczyszczonyBFS();
+                        poleNaGraf.wyczyszczonyDji();
+
+                        Analizator.generuj(graf);
+                        poleNaGraf.setKoniecDji(graf.getLiczbaWierzchołków() - 1);
+
+                        repaint();
+                    }
+                } catch (NumberFormatException r) {
+                    komunikaty.setText("Proszę wpisać w odpowiednie pola liczbę kolumn i wierszy! Muszą być to liczby naturalne > 0.");
+                }
+            }
+        });
 
         przyciskWczytaj = new JButton();
-        przyciskWczytaj.addActionListener(this);
         przyciskWczytaj.setText("Wczytaj graf");
         przyciskWczytaj.setFocusable(false);
+        przyciskWczytaj.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser wybieracz = new JFileChooser();
+
+                int odpowedz = wybieracz.showOpenDialog(null);
+
+                if (odpowedz == JFileChooser.APPROVE_OPTION) {
+                    File plik = new File(wybieracz.getSelectedFile().getAbsolutePath());
+                    String nazwa = plik.getName();
+                    komunikaty.setText("Wczytuje plik o nazwie " + nazwa);
+
+                    Analizator.czytaj(graf, plik);
+                    poleNaGraf.setKoniecDji(graf.getLiczbaWierzchołków() - 1);
+
+                    przyciskiAlgorytmy.clearSelection();
+                    poleNaGraf.wyczyszczonyBFS();
+                    poleNaGraf.wyczyszczonyDji();
+
+                    repaint();
+                }
+            }
+        });
 
         przyciskWagi = new JButton();
-        przyciskWagi.addActionListener(this);
         przyciskWagi.setText("Ustawienie wag");
         przyciskWagi.setFocusable(false);
+        przyciskWagi.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                boolean error = false;
+
+                try {
+                    String wagi = JOptionPane.showInputDialog("Proszę podać wagę maksymalną i minimalną wag połączeń między węzłami:");
+                    Scanner skaner = new Scanner(wagi);
+                    if (skaner.hasNextDouble()) {
+                        graf.setWagaMax(skaner.nextDouble());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Proszę podać liczbę!", "Błąd", JOptionPane.ERROR_MESSAGE);
+                        error = true;
+                    }
+
+                    if (!error) {
+                        if (skaner.hasNextDouble()) {
+                            graf.setWagaMin(skaner.nextDouble());
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Proszę podać dwie liczby!", "Błąd", JOptionPane.ERROR_MESSAGE);
+                            error = true;
+                        }
+                    }
+
+                    if (graf.getWagaMin() < 0 || graf.getWagaMax() < 0) {
+                        error = true;
+                        graf.setWagaMin(0);
+                        graf.setWagaMax(10);
+                        JOptionPane.showMessageDialog(null, "Wagi powinny być liczbami dodatnimi!", "Błąd", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    skaner.close();
+
+                    if (error) {
+                        komunikaty.setText("Błędnie podano wagi połączeń między węzłami!");
+                    } else {
+                        if (graf.getWagaMin() > graf.getWagaMax()) {
+                            double tempWaga = graf.getWagaMax();
+                            graf.setWagaMax(graf.getWagaMin());
+                            graf.setWagaMin(tempWaga);
+                        }
+
+                        komunikaty.setText("Generowany graf bedzie miał wagi połączeń: " + graf.getWagaMin() + "-" + graf.getWagaMax());
+                        repaint();
+                    }
+                } catch (NullPointerException r) {
+                    komunikaty.setText("Wychodzę z wag");
+                }
+            }
+        });
 
         przyciskZapisz = new JButton();
-        przyciskZapisz.addActionListener(this);
         przyciskZapisz.setText("Zapisz");
         przyciskZapisz.setFocusable(false);
+        przyciskZapisz.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (graf.getWierzcholki() != null) {
+                    JFileChooser wybieracz = new JFileChooser();
+
+                    int odpowedz = wybieracz.showSaveDialog(null);
+
+                    if (odpowedz == JFileChooser.APPROVE_OPTION) {
+                        graf.setPlikZapisu(new File(wybieracz.getSelectedFile().getAbsolutePath()));
+                        komunikaty.setText("Zapisuje plik o nazwie " + graf.getNazwaPlikZapisu());
+                        graf.zapiszaGrafDoPliku(komunikaty);
+                    }
+                } else {
+                    komunikaty.setText("Nie wygenerowano jeszcze grafu, który mozna było by zapisać!");
+                }
+            }
+        });
 
         przyciskPomoc = new JButton();
-        przyciskPomoc.addActionListener(this);
         przyciskPomoc.setText("Pomoc");
         przyciskPomoc.setFocusable(false);
+        przyciskPomoc.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                komunikaty.setText("Wyświetlasz okno pomocy.");
+                new EkranPomocy();
+            }
+        });
 
         przyciskWyczysc = new JButton();
-        przyciskWyczysc.addActionListener(this);
         przyciskWyczysc.setText("Wyczyść");
         przyciskWyczysc.setFocusable(false);
+        przyciskWyczysc.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                przyciskiAlgorytmy.clearSelection();
+                poleNaGraf.wyczyszczonyBFS();
+                poleNaGraf.wyczyszczonyDji();
+                repaint();
+                komunikaty.setText("Powrót do początkowego wyglądy grafu.");
+            }
+        });
 
         poleNaKolumny = new JTextField();
         poleNaKolumny.setPreferredSize(new Dimension(100, 20));
@@ -134,200 +325,5 @@ public class Interfejs extends JFrame implements ActionListener {
         poleNaPrzyciski.add(przyciskZapisz);
         poleNaPrzyciski.add(przyciskWyczysc);
         poleNaPrzyciski.add(przyciskPomoc);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == przyciskBFS) {
-            if(graf.getWierzcholki() != null) {
-                komunikaty.setText("wciskam BFS");
-                poleNaGraf.kliknientyBFS();
-                poleNaGraf.wyczyszczonyDji();
-
-                int[] kolor = new int[graf.getLiczbaWierzchołków()];
-                Wierzcholek[] rodzic = new Wierzcholek[graf.getLiczbaWierzchołków()];
-                int[] odległość = new int[graf.getLiczbaWierzchołków()];
-                algorytmy.wykonajAlgorytmBFS(graf, kolor, rodzic, odległość, początekBFS);
-
-                poleNaGraf.setTablicaBFS(odległość);
-
-                for (int i = 0; i < graf.getLiczbaWierzchołków(); i++) {
-                    if (odległość[i] == -1 && i != początekBFS) {
-                        break;
-                    }
-                    if (i == graf.getLiczbaWierzchołków() - 1) {
-                        komunikaty.setText("Graf jest spójny");
-                        graf.setSpojny(true);
-                        repaint();
-                    } else {
-                        komunikaty.setText("Graf nie jest spójny");
-                        graf.setSpojny(false);
-                        repaint();
-                    }
-                }
-            } else {
-                komunikaty.setText("Nie wygenerowano / wczytano żadnego grafu aby rozpocząć analizę algorytmem.");
-                przyciskiAlgorytmy.clearSelection();
-            }
-        }
-
-        if(e.getSource() == przyciksDijkstra) {
-            if(graf.getWierzcholki() != null) {
-
-                poleNaGraf.kliknientyDji();
-                poleNaGraf.wyczyszczonyBFS();
-
-                try {
-                    początekDijkstra = Integer.parseInt(poleNaPoczatek.getText());
-                } catch (NumberFormatException r) {
-                    if (!(Objects.equals(poleNaPoczatek.getText(), "początek Djikstry"))) {
-                        JOptionPane.showMessageDialog(null, "Proszę podać liczby naturalną jako początek dla algorytmu Djikstra!\nProgram automatycznie przypisuje początek jako wierzchołek 0.", "Błąd", JOptionPane.ERROR_MESSAGE);
-                        początekDijkstra = 0;
-                    }
-                    poleNaPoczatek.setText("0");
-                }
-
-                double[] odległości = new double[graf.getLiczbaWierzchołków()];
-                algorytmy.wykonajAlgorytmDijkstry(graf, początekDijkstra, odległości, poleNaGraf);
-                for (int i = 0; i < graf.getLiczbaWierzchołków(); i++) {
-                    System.out.println(odległości[i]);
-                }
-                poleNaGraf.setPoczatekDji(początekDijkstra);
-                komunikaty.setText("Najkrótsza droga z wierzchołka " + początekDijkstra + " do wierzchołka " + poleNaGraf.getKoniecDji() + " wynosi " + odległości[poleNaGraf.getKoniecDji()]);
-                poleNaGraf.setOdleglosci(odległości);
-                repaint();
-            } else {
-                komunikaty.setText("Nie wygenerowano / wczytano żadnego grafu aby rozpocząć analizę algorytmem.");
-                przyciskiAlgorytmy.clearSelection();
-            }
-        }
-
-        if(e.getSource() == przyciskGeneracja) {
-            boolean error = false;
-
-            try {
-                graf.setKolumny(Integer.parseInt(poleNaKolumny.getText()));
-                graf.setWiersze(Integer.parseInt(poleNaWiersze.getText()));
-
-                if(graf.getWiersze() <= 0 || graf.getKolumny() <= 0) {
-                    error = true;
-                }
-
-                if (error) {
-                    komunikaty.setText("Błędnie podano wymiary grafu!");
-                } else {
-                    komunikaty.setText("Generuje graf: " + graf.getKolumny() + "x" + graf.getWiersze());
-
-                    przyciskiAlgorytmy.clearSelection();
-                    poleNaGraf.wyczyszczonyBFS();
-                    poleNaGraf.wyczyszczonyDji();
-
-                    Analizator.generuj(graf);
-                    poleNaGraf.setKoniecDji(graf.getLiczbaWierzchołków() - 1);
-
-                    repaint();
-                }
-            } catch (NumberFormatException r) {
-                komunikaty.setText("Proszę wpisać w odpowiednie pola liczbę kolumn i wierszy! Muszą być to liczby naturalne > 0.");
-            }
-        }
-
-        if(e.getSource() == przyciskWczytaj) {
-            JFileChooser wybieracz = new JFileChooser();
-
-            int odpowedz = wybieracz.showOpenDialog(null);
-
-            if(odpowedz == JFileChooser.APPROVE_OPTION) {
-                File plik = new File(wybieracz.getSelectedFile().getAbsolutePath());
-                String nazwa = plik.getName();
-                komunikaty.setText("Wczytuje plik o nazwie " + nazwa);
-
-                Analizator.czytaj(graf, plik);
-                poleNaGraf.setKoniecDji(graf.getLiczbaWierzchołków() - 1);
-
-                przyciskiAlgorytmy.clearSelection();
-                poleNaGraf.wyczyszczonyBFS();
-                poleNaGraf.wyczyszczonyDji();
-
-                repaint();
-            }
-        }
-
-        if(e.getSource() == przyciskWagi) {
-            boolean error = false;
-
-            try {
-                String wagi = JOptionPane.showInputDialog("Proszę podać wagę maksymalną i minimalną wag połączeń między węzłami:");
-                Scanner skaner = new Scanner(wagi);
-                if (skaner.hasNextDouble()) {
-                    graf.setWagaMax(skaner.nextDouble());
-                } else {
-                    JOptionPane.showMessageDialog(null, "Proszę podać liczbę!", "Błąd", JOptionPane.ERROR_MESSAGE);
-                    error = true;
-                }
-
-                if (!error) {
-                    if (skaner.hasNextDouble()) {
-                        graf.setWagaMin(skaner.nextDouble());
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Proszę podać dwie liczby!", "Błąd", JOptionPane.ERROR_MESSAGE);
-                        error = true;
-                    }
-                }
-
-                if(graf.getWagaMin() < 0 || graf.getWagaMax() < 0) {
-                    error = true;
-                    graf.setWagaMin(0);
-                    graf.setWagaMax(10);
-                    JOptionPane.showMessageDialog(null, "Wagi powinny być liczbami dodatnimi!", "Błąd", JOptionPane.ERROR_MESSAGE);
-                }
-
-                skaner.close();
-
-                if (error) {
-                    komunikaty.setText("Błędnie podano wagi połączeń między węzłami!");
-                } else {
-                    if(graf.getWagaMin() > graf.getWagaMax()) {
-                        double tempWaga = graf.getWagaMax();
-                        graf.setWagaMax(graf.getWagaMin());
-                        graf.setWagaMin(tempWaga);
-                    }
-
-                    komunikaty.setText("Generowany graf bedzie miał wagi połączeń: " + graf.getWagaMin() + "-" + graf.getWagaMax());
-                    repaint();
-                }
-            } catch (NullPointerException r) {
-                komunikaty.setText("Wychodzę z wag");
-            }
-        }
-
-        if(e.getSource() == przyciskZapisz) {
-            if(graf.getWierzcholki() != null) {
-                JFileChooser wybieracz = new JFileChooser();
-
-                int odpowedz = wybieracz.showSaveDialog(null);
-
-                if (odpowedz == JFileChooser.APPROVE_OPTION) {
-                    graf.setPlikZapisu(new File(wybieracz.getSelectedFile().getAbsolutePath()));
-                    komunikaty.setText("Zapisuje plik o nazwie " + graf.getNazwaPlikZapisu());
-                    graf.zapiszaGrafDoPliku(komunikaty);
-                }
-            } else {
-                komunikaty.setText("Nie wygenerowano jeszcze grafu, który mozna było by zapisać!");
-            }
-        }
-
-        if(e.getSource() == przyciskWyczysc) {
-            przyciskiAlgorytmy.clearSelection();
-            poleNaGraf.wyczyszczonyBFS();
-            poleNaGraf.wyczyszczonyDji();
-            repaint();
-            komunikaty.setText("Powrót do początkowego wyglądy grafu.");
-        }
-
-        if(e.getSource() == przyciskPomoc) {
-            komunikaty.setText("Wyświetlasz okno pomocy.");
-            new EkranPomocy();
-        }
     }
 }
