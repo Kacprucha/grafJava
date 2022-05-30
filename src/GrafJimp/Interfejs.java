@@ -16,6 +16,7 @@ public class Interfejs extends JFrame {
     private int początekBFS = 0;
     private int początekDijkstra = 0;
     private int koniecDjikstry;
+    int wynikAnalizy;
 
     JPanel poleNaPrzyciski = new JPanel();
     JPanel poleNaKomunikaty = new JPanel();
@@ -35,6 +36,7 @@ public class Interfejs extends JFrame {
     JTextField poleNaKolumny;
     JTextField poleNaWiersze;
     JTextField poleNaPoczatek;
+    JTextField poleNaKoniec;
 
     ButtonGroup przyciskiAlgorytmy;
 
@@ -46,7 +48,8 @@ public class Interfejs extends JFrame {
         przyciskBFS.setFocusable(false);
         przyciskBFS.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (graf.getWierzcholki() != null) {
+                komunikaty.setText("wciskam BFS");
+                if (graf.getWierzcholki() != null && wynikAnalizy == 0) {
                     komunikaty.setText("wciskam BFS");
                     poleNaGraf.kliknientyBFS();
                     poleNaGraf.wyczyszczonyDji();
@@ -54,6 +57,7 @@ public class Interfejs extends JFrame {
                     int[] kolor = new int[graf.getLiczbaWierzchołków()];
                     Wierzcholek[] rodzic = new Wierzcholek[graf.getLiczbaWierzchołków()];
                     int[] odległość = new int[graf.getLiczbaWierzchołków()];
+
                     algorytmy.wykonajAlgorytmBFS(graf, kolor, rodzic, odległość, początekBFS);
 
                     poleNaGraf.setTablicaBFS(odległość);
@@ -69,7 +73,9 @@ public class Interfejs extends JFrame {
                         } else {
                             komunikaty.setText("Graf nie jest spójny");
                             graf.setSpojny(false);
-                            repaint();
+                            if(graf.getLiczbaWierzchołków() < 100000) {
+                                repaint();
+                            }
                         }
                     }
                 } else {
@@ -84,11 +90,7 @@ public class Interfejs extends JFrame {
         przyciksDijkstra.setFocusable(false);
         przyciksDijkstra.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (graf.getWierzcholki() != null) {
-
-                    poleNaGraf.kliknientyDji();
-                    poleNaGraf.wyczyszczonyBFS();
-
+                if (graf.getWierzcholki() != null && wynikAnalizy == 0) {
                     try {
                         początekDijkstra = Integer.parseInt(poleNaPoczatek.getText());
                     } catch (NumberFormatException r) {
@@ -97,17 +99,25 @@ public class Interfejs extends JFrame {
                             początekDijkstra = 0;
                         }
                         poleNaPoczatek.setText("0");
+                        poleNaKoniec.setText(Integer.toString(poleNaGraf.getKoniecDji()));
                     }
 
                     double[] odległości = new double[graf.getLiczbaWierzchołków()];
-                    algorytmy.wykonajAlgorytmDijkstry(graf, początekDijkstra, odległości, poleNaGraf);
+                    if(!poleNaGraf.getDjikstra()) {
+                        algorytmy.wykonajAlgorytmDijkstry(graf, początekDijkstra, odległości, poleNaGraf);
+                    }
+                    poleNaGraf.kliknientyDji();
+                    poleNaGraf.wyczyszczonyBFS();
                     for (int i = 0; i < graf.getLiczbaWierzchołków(); i++) {
                         System.out.println(odległości[i]);
                     }
                     poleNaGraf.setPoczatekDji(początekDijkstra);
+                    poleNaGraf.setKoniecDji(Integer.parseInt(poleNaKoniec.getText()));
                     komunikaty.setText("Najkrótsza droga z wierzchołka " + początekDijkstra + " do wierzchołka " + poleNaGraf.getKoniecDji() + " wynosi " + odległości[poleNaGraf.getKoniecDji()]);
                     poleNaGraf.setOdleglosci(odległości);
-                    repaint();
+                    if(graf.getLiczbaWierzchołków() < 100000) {
+                        repaint();
+                    }
                 } else {
                     komunikaty.setText("Nie wygenerowano / wczytano żadnego grafu aby rozpocząć analizę algorytmem.");
                     przyciskiAlgorytmy.clearSelection();
@@ -144,9 +154,18 @@ public class Interfejs extends JFrame {
                         poleNaGraf.wyczyszczonyDji();
 
                         Analizator.generuj(graf);
+                        wynikAnalizy = 0;
                         poleNaGraf.setKoniecDji(graf.getLiczbaWierzchołków() - 1);
 
-                        repaint();
+                        poleNaPoczatek.setText("0");
+                        poleNaKoniec.setText(Integer.toString(graf.getLiczbaWierzchołków() - 1));
+
+                        if(graf.getLiczbaWierzchołków() < 100000) {
+                            repaint();
+                        } else {
+                            komunikaty.setText("Graf został wygenerowany ale jest za duży, żeby go narysować");
+                            poleNaGraf.removeAll();
+                        }
                     }
                 } catch (NumberFormatException r) {
                     komunikaty.setText("Proszę wpisać w odpowiednie pola liczbę kolumn i wierszy! Muszą być to liczby naturalne > 0.");
@@ -168,14 +187,35 @@ public class Interfejs extends JFrame {
                     String nazwa = plik.getName();
                     komunikaty.setText("Wczytuje plik o nazwie " + nazwa);
 
-                    Analizator.czytaj(graf, plik);
-                    poleNaGraf.setKoniecDji(graf.getLiczbaWierzchołków() - 1);
+                    wynikAnalizy = Analizator.czytaj(graf, plik);
+                    if(wynikAnalizy != 0) {
+                        komunikaty.setText("Błędny format pliku: " + nazwa);
+                        przyciskiAlgorytmy.clearSelection();
+                        poleNaGraf.wyczyszczonyBFS();
+                        poleNaGraf.wyczyszczonyDji();
+                        poleNaPoczatek.setText("początek Djikstry");
+                        poleNaKoniec.setText("koniec Djikstry");
 
-                    przyciskiAlgorytmy.clearSelection();
-                    poleNaGraf.wyczyszczonyBFS();
-                    poleNaGraf.wyczyszczonyDji();
+                        repaint();
+                    } else {
+                        komunikaty.setText("Wczytano plik o nazwie " + nazwa);
 
-                    repaint();
+                        poleNaGraf.setKoniecDji(graf.getLiczbaWierzchołków() - 1);
+
+                        poleNaPoczatek.setText("0");
+                        poleNaKoniec.setText(Integer.toString(graf.getLiczbaWierzchołków() - 1));
+
+                        przyciskiAlgorytmy.clearSelection();
+                        poleNaGraf.wyczyszczonyBFS();
+                        poleNaGraf.wyczyszczonyDji();
+
+                        if(graf.getLiczbaWierzchołków() < 100000) {
+                            repaint();
+                        } else {
+                            komunikaty.setText("Graf został wczytany ale jest za duży, żeby go narysować");
+                            poleNaGraf.removeAll();
+                        }
+                    }
                 }
             }
         });
@@ -189,6 +229,7 @@ public class Interfejs extends JFrame {
 
                 try {
                     String wagi = JOptionPane.showInputDialog("Proszę podać wagę maksymalną i minimalną wag połączeń między węzłami:");
+                    wagi = wagi.replace('.', ',');
                     Scanner skaner = new Scanner(wagi);
                     if (skaner.hasNextDouble()) {
                         graf.setWagaMax(skaner.nextDouble());
@@ -225,10 +266,10 @@ public class Interfejs extends JFrame {
                         }
 
                         komunikaty.setText("Generowany graf bedzie miał wagi połączeń: " + graf.getWagaMin() + "-" + graf.getWagaMax());
-                        repaint();
+                        //repaint();
                     }
                 } catch (NullPointerException r) {
-                    komunikaty.setText("Wychodzę z wag");
+                    komunikaty.setText("Wychodzę z ustawiania wag");
                 }
             }
         });
@@ -289,6 +330,9 @@ public class Interfejs extends JFrame {
         poleNaPoczatek.setPreferredSize(new Dimension(100, 20));
         poleNaPoczatek.setText("początek Djikstry");
 
+        poleNaKoniec = new JTextField("koniec Djikstry");
+        poleNaKoniec.setPreferredSize(new Dimension(100, 20));
+
         poleNaPrzyciski.setPreferredSize(new Dimension(150, 100));
         poleNaPrzyciski.setLayout(new FlowLayout());
         poleNaPrzyciski.setBackground(Color.lightGray);
@@ -322,6 +366,7 @@ public class Interfejs extends JFrame {
         poleNaPrzyciski.add(przyciskBFS);
         poleNaPrzyciski.add(przyciksDijkstra);
         poleNaPrzyciski.add(poleNaPoczatek);
+        poleNaPrzyciski.add(poleNaKoniec);
         poleNaPrzyciski.add(przyciskZapisz);
         poleNaPrzyciski.add(przyciskWyczysc);
         poleNaPrzyciski.add(przyciskPomoc);

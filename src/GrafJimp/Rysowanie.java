@@ -27,7 +27,7 @@ public class Rysowanie {
             bazoweyk = (((listaKrawedzi[i].getPolaczenie()[1] + 1) - (graf.getWiersze() * ((listaKrawedzi[i].getPolaczenie()[1]) / graf.getWiersze()))) * wysokoscJednostki) - (promien * 2);
 
             if (konceKrawedzi[1] == konceKrawedzi[0] - 1) {
-                xp =bazowexp + promien - odlegolosc;
+                xp = bazowexp + promien - odlegolosc;
                 yp = bazoweyp;
 
                 xk = bazowexk + promien - odlegolosc;

@@ -98,10 +98,6 @@ public class Analizator {
         double waga;
         int sasiad;
 
-        for(int i = 0; i < graf.getLiczbaWierzchołków(); i++) {
-            
-        }
-
         for( int i = 0; i < graf.getKolumny() * graf.getWiersze(); i++) {
             Wierzcholek wierzcholek = new Wierzcholek(i);
 

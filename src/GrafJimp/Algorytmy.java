@@ -117,8 +117,8 @@ public class Algorytmy {
                             //System.out.println(tmpWierzcholki[u].getNumerySąsiadów()[nrSasiada]);
                             //System.out.println(graf.getWierzcholki()[u].getNumerySąsiadów()[nrSasiada]);
                             tmpWierzcholki[u].setNumerSasiada(nrSasiada, -1);
-                            //.out.println(tmpWierzcholki[u].getNumerySąsiadów()[nrSasiada]);
-                            //.out.println(graf.getWierzcholki()[u].getNumerySąsiadów()[nrSasiada]);
+                            //System.out.println(tmpWierzcholki[u].getNumerySąsiadów()[nrSasiada]);
+                            //System.out.println(graf.getWierzcholki()[u].getNumerySąsiadów()[nrSasiada]);
                             nrSasiada++;
                             break;
                         }
