@@ -105,10 +105,6 @@ public class Analizator {
                 wierzcholek.setWagiPolaczen(j, graf.getWagaMax() + 1);
             }
 
-            System.out.println("wierzchołek " + i);
-            System.out.println("sąsiedzi:");
-
-
             sasiad = i - 1;
             if(sasiad >= 0 && (sasiad + 1) % graf.getWiersze() != 0) {
                 wierzcholek.dodajSąsiada(sasiad, pozycja);
@@ -120,8 +116,6 @@ public class Analizator {
 
                 wierzcholek.setWagiPolaczen(pozycja, waga);
                 pozycja++;
-
-                System.out.print(sasiad + " waga - " + waga + "\n");
             }
 
             sasiad = i + graf.getWiersze();
@@ -136,7 +130,6 @@ public class Analizator {
                 wierzcholek.setWagiPolaczen(pozycja, waga);
                 pozycja++;
 
-                System.out.print(sasiad + " waga - " + waga + "\n");
             }
 
             sasiad = i + 1;
@@ -150,8 +143,6 @@ public class Analizator {
 
                 wierzcholek.setWagiPolaczen(pozycja, waga);
                 pozycja++;
-
-                System.out.print(sasiad + " waga - " + waga + "\n");
             }
 
             sasiad = i - graf.getWiersze();
@@ -165,14 +156,10 @@ public class Analizator {
 
                 wierzcholek.setWagiPolaczen(pozycja, waga);
                 pozycja++;
-
-                System.out.print(sasiad + " waga - " + waga + "\n");
             }
 
             pozycja = 0;
             graf.dodajWierzcholek(wierzcholek);
-
-            System.out.println("koniec");
         }
 
     }

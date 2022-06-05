@@ -81,9 +81,6 @@ public class PoleNaGraf extends JPanel {
     public void setListaDji(ArrayList<ArrayList<Krawedz>> l) {
         listaDji = l;
     }
-    public boolean getDjikstra() {
-        return djikstra;
-    }
 
     public double[] getOdleglosci() {
         return odleglosci;
@@ -105,29 +102,31 @@ public class PoleNaGraf extends JPanel {
 
         g2D.drawRect(0, this.getHeight() - 50, this.getWidth(), 50);
 
-        //new SkalaLiczb(this.getWidth() - 22, graf.getWagaMin(), graf.getWagaMax(), 5, this.getHeight() - 7, g2D);
-
-        if(graf.getLiczbaWierzchołków() != 0 && interfejs.wynikAnalizy == 0) {
+        if(graf.getLiczbaWierzchołków() != 0 && interfejs.wynikAnalizy == 0 && graf.getLiczbaWierzchołków() < 100000) {
             int mnoznikY = 1;
             int mnoznikX = 0;
             int promien, x, y;
 
             setSzerekosc(this);
             setWysokosc(this);
-            /*
-            int wysokoscJednostki = (this.getWysokosc() - WYSOKOSC_SKALI) / (graf.getWiersze() + 1);
-            int szerokoscJednostki = this.getSzerokosc() / (graf.getKolumny() + 1);
-             */
+
+            int wysokoscJednostki;
+            int szerokoscJednostki;
 
             double tempWys = Math.round((double) (this.getWysokosc() - WYSOKOSC_SKALI) / (graf.getWiersze() + 1));
             double tempSzer = Math.round((double) (this.getSzerokosc() / (graf.getKolumny() + 1)));
 
-            System.out.println("\t" + tempWys + " " + tempSzer);
+            if(tempWys * (graf.getWiersze() + 1) >= (this.getWysokosc() - WYSOKOSC_SKALI)) {
+                wysokoscJednostki = (this.getWysokosc() - WYSOKOSC_SKALI) / (graf.getWiersze() + 1);
+            } else {
+                wysokoscJednostki = (int) tempWys;
+            }
 
-            int wysokoscJednostki = (int) tempWys;
-            int szerokoscJednostki = (int) tempSzer;
-
-            System.out.println("\t" + wysokoscJednostki + " " + szerokoscJednostki);
+            if(tempSzer * (graf.getKolumny() + 1) >= this.getSzerokosc()) {
+                szerokoscJednostki = this.getSzerokosc() / (graf.getKolumny() + 1);
+            } else {
+                szerokoscJednostki = (int) tempSzer;
+            }
 
             if(wysokoscJednostki > szerokoscJednostki) {
                 promien = szerokoscJednostki / 4;

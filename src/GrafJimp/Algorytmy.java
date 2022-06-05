@@ -1,7 +1,6 @@
 package GrafJimp;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Algorytmy {
 
@@ -12,7 +11,6 @@ public class Algorytmy {
             kolor[w.getNumer()] = 0;
             rodzic[w.getNumer()] = null;
             odleglosc[w.getNumer()] = -1;
-            //System.out.println(Arrays.toString(w.getNumerySąsiadów()));
         }
 
         kolor[poczatekBFS] = 1;
@@ -114,18 +112,14 @@ public class Algorytmy {
 
                             kolejka[koniec++] = i;
                             poprzednik[i] = u;
-                            //System.out.println(tmpWierzcholki[u].getNumerySąsiadów()[nrSasiada]);
-                            //System.out.println(graf.getWierzcholki()[u].getNumerySąsiadów()[nrSasiada]);
                             tmpWierzcholki[u].setNumerSasiada(nrSasiada, -1);
-                            //System.out.println(tmpWierzcholki[u].getNumerySąsiadów()[nrSasiada]);
-                            //System.out.println(graf.getWierzcholki()[u].getNumerySąsiadów()[nrSasiada]);
                             nrSasiada++;
                             break;
                         }
                     }
                 }
             }
-            poczatek++;;
+            poczatek++;
         }
         if(r!=null)
             r.setListaDji(lista);
