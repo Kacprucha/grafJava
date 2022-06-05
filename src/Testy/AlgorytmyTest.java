@@ -3,7 +3,8 @@ package Testy;
 import GrafJimp.*;
 import org.junit.jupiter.api.*;
 
-import static org.testng.AssertJUnit.*;
+import static org.junit.Assert.*;
+
 
 
 
@@ -65,7 +66,7 @@ class AlgorytmyTest {
                     assertNotSame(odległości[j], 0.0);
                     continue;
                 }
-                assertEquals(odległości[j], 0.0);
+                Assertions.assertEquals(odległości[j], 0.0);
             }
         }
         for(int i =0;i<graf.getLiczbaWierzchołków();i++){
